@@ -11,4 +11,4 @@ set -o pipefail
 
 ROOT_PATH="$(cd "$(dirname "$0")/.." ; pwd -P)"
 
-"${ROOT_PATH}/osx/install"
+"${ROOT_PATH}/macos/install"
