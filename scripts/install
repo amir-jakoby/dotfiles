@@ -1,0 +1,14 @@
+  
+#!/usr/bin/env bash
+
+#
+# Perform an install of all developer dependencies.
+#
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+ROOT_PATH="$(cd "$(dirname "$0")/.." ; pwd -P)"
+
+"${ROOT_PATH}/osx/install"
