@@ -1,0 +1,105 @@
+# General
+.AppleDouble
+.LSOverride
+
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# IDE
+.idea/
+
+# pyenv
+.python-version
+.pytest_cache/
+
+.direnv
+.envrc
+.eslintcache
+.nvimrc
+.projections.json
+.stylelintcache
+
+#
+# JS-specific files
+#
+
+.sass-cache
+bower_components
+node_modules
+
+#
+# Editor-specific files
+#
+
+*.orig
+*.swo
+*.swp
+*.vims
+*~
+.tern-port
+\#*\#
+flycheck-*.el
+
+#
+# OS-generated files
+#
+
+.DS_Store
+.DS_Store?
+.Spotlight-V100
+.Trashes
+._*
+Icon?
+Thumbs.db
+ehthumbs.db
+
+#
+# Compiled source
+#
+
+*.class
+*.com
+*.dll
+*.exe
+*.o
+*.pyc
+*.so
+
+#
+# Packages
+#
+
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+#
+# Logs and databases
+#
+
+*.log
+*.sqlite
+*.db
+
+#
+# OTHER
+#
+.nrepl-port

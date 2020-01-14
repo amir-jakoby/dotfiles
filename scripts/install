@@ -12,3 +12,20 @@ set -o pipefail
 ROOT_PATH="$(cd "$(dirname "$0")/.." ; pwd -P)"
 
 "${ROOT_PATH}/macos/install"
+
+#
+# Link dotfiles
+#
+
+packages=(
+  "bin"
+  "git"
+  "ssh"
+  "zsh"
+)
+
+echo "Symlinking dotfiles into $HOME..."
+for pkg in "${packages[@]}"; do
+stow --target="$HOME" --verbose=1 "${pkg}"
+done
+echo "Symlinked dotfiles into $HOME."

@@ -1,0 +1,49 @@
+[user]
+	name = Amir Jakoby
+    email = ajakoby@newrelic.com
+[credential]
+	helper = osxkeychain
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+	amend = "!git-amend"
+	checkout-pr = "!git-checkout-pr"
+	get-commit-message = "!git log --format=%B -n 1"
+	up = "!git-update"
+[submodule]
+	recurse = true
+[github]
+	user = amir-jakoby	
+[core]
+	excludesfile = ~/.gitignore.global
+
+[color]
+	ui = true
+
+[hub]
+	protocol = ssh
+
+[mergetool]
+	prompt = false
+
+[difftool]
+	prompt = false
+
+[branch]
+	autosetuprebase = always
+
+[commit]
+	gpgSign = true
+	verbose = true
+
+[tag]
+	gpgSign = true
+
+[push]
+	default = current
+	followTags = true
+
+[url "git@github.com:"]
+	insteadOf = https://github.com/
