@@ -2,7 +2,7 @@ iterm2
 docker
 1password
 1password-cli
-adoptopenjdk8
+adoptopenjdk
 caffeine
 evernote
 flux
