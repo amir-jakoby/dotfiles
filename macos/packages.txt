@@ -121,3 +121,5 @@ zsh
 zsh-completions
 zstd
 hub
+fzf
+stow
