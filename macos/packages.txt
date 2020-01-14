@@ -120,3 +120,4 @@ zlib
 zsh
 zsh-completions
 zstd
+hub
