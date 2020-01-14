@@ -22,7 +22,7 @@ fi
 brew update
 
 while read -r tap; do
-  HOMEBREW_NO_AUTO_UPDATE=1 brew tap "${tap}"
+  HOMEBREW_NO_AUTO_UPDATE=1 brew tap ${tap}
 done < "${TAPS_LIST}"
 
 while read -r package; do
