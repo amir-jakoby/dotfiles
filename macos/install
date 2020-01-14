@@ -26,12 +26,13 @@ while read -r tap; do
 done < "${TAPS_LIST}"
 
 while read -r package; do
-  HOMEBREW_NO_AUTO_UPDATE=1 brew install "${package}"
-done < "${PACKAGES_LIST}"
+  HOMEBREW_NO_AUTO_UPDATE=1 brew cask install ${package} --no-quarantine
+done < "${CASKS_LIST}"
 
 while read -r package; do
-  HOMEBREW_NO_AUTO_UPDATE=1 brew cask install "${package}"
-done < "${CASKS_LIST}"
+  HOMEBREW_NO_AUTO_UPDATE=1 brew install ${package}
+done < "${PACKAGES_LIST}"
+
 
 # Print a warning for any taps that are not committed to taps.txt
 for tap in $(echo "$(cat "${TAPS_LIST}")" "$(cat "${TAPS_LIST}")" "$(brew tap)" | tr ' ' '\n' | sort | uniq -u); do

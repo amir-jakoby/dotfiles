@@ -1,4 +1,3 @@
-caskroom/versions
 derailed/k9s
 homebrew/cask
 homebrew/cask-fonts

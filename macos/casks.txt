@@ -1,8 +1,8 @@
+adoptopenjdk
 iterm2
 docker
 1password
 1password-cli
-adoptopenjdk
 caffeine
 evernote
 flux
@@ -20,7 +20,6 @@ google-cloud-sdk
 google-drive-file-stream
 insomnia
 kubernetic
-mysql-utilities
 mysqlworkbench
 ngrok
 pycharm
