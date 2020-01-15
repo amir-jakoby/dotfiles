@@ -43,3 +43,7 @@ done
 for package in $(echo "$(cat "${CASKS_LIST}")" "$(cat "${CASKS_LIST}")" "$(brew cask list)" | tr ' ' '\n' | sort | uniq -u); do
   echo "Found extraneous installed homebrew cask ${package}; consider adding it to casks.txt."
 done
+
+for setup_script in ${CURRENT_SCRIPT_PATH}/setup/*.sh ; do
+   "${setup_script}"
+done

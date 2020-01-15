@@ -10,11 +10,12 @@ packages=(
   "bin"
   "git"
   "zsh"
+  "macos"
 )
 
 echo "Symlinking dotfiles from ${ROOT_PATH} into ${HOME}..."
 for pkg in "${packages[@]}"; do
-cd ${ROOT_PATH}
-stow --target="$HOME" --verbose=1 "${pkg}"
+    cd ${ROOT_PATH}
+    stow --target="$HOME" --verbose=1 "${pkg}"
 done
 echo "Symlinked dotfiles into $HOME."
