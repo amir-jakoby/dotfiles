@@ -1,0 +1,15 @@
+<application>
+  <component name="NotificationConfiguration">
+    <notification groupId="Debugger messages" displayType="TOOL_WINDOW" />
+    <notification groupId="Dependencies from package.json" displayType="STICKY_BALLOON" />
+    <notification groupId="Find in Path" displayType="TOOL_WINDOW" />
+    <notification groupId="Find Problems" displayType="STICKY_BALLOON" />
+    <notification groupId="Indexing" />
+    <notification groupId="Package requirements" />
+    <notification groupId="Pipfile Watcher" displayType="STICKY_BALLOON" />
+    <notification groupId="Profiling" />
+    <notification groupId="Python Compatibility Inspection Advertiser" displayType="STICKY_BALLOON" />
+    <notification groupId="Python Scientific View Advertiser" displayType="STICKY_BALLOON" />
+    <notification groupId="Python Stub Packages Advertiser" displayType="STICKY_BALLOON" />
+  </component>
+</application>
