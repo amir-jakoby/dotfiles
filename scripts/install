@@ -1,4 +1,3 @@
-  
 #!/usr/bin/env bash
 
 #
@@ -17,14 +16,4 @@ ROOT_PATH="$(cd "$(dirname "$0")/.." ; pwd -P)"
 # Link dotfiles
 #
 
-packages=(
-  "bin"
-  "git"
-  "zsh"
-)
-
-echo "Symlinking dotfiles into $HOME..."
-for pkg in "${packages[@]}"; do
-stow --target="$HOME" --verbose=1 "${pkg}"
-done
-echo "Symlinked dotfiles into $HOME."
+"${ROOT_PATH}/scripts/install_packages"

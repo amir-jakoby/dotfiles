@@ -35,11 +35,11 @@
 	autosetuprebase = always
 
 [commit]
-	gpgSign = true
+	gpgSign = false
 	verbose = true
 
 [tag]
-	gpgSign = true
+	gpgSign = false
 
 [push]
 	default = current
