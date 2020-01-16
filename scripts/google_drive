@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o nounset
+set -o pipefail
+
+ROOT_PATH="${HOME}/Google Drive/dotfiles"
+
+packages=(
+  "ssh"
+)
+
+echo "Symlinking dotfiles from ${ROOT_PATH} into ${HOME}..."
+for pkg in "${packages[@]}"; do
+    cd "${ROOT_PATH}"
+    stow --target="$HOME" --verbose=1 "${pkg}"
+done
