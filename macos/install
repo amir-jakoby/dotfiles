@@ -47,3 +47,11 @@ done
 for setup_script in ${CURRENT_SCRIPT_PATH}/setup/*.sh ; do
    "${setup_script}"
 done
+
+# Add installed java versions to jenv
+for version in /Library/Java/JavaVirtualMachines/* ; do
+  jenv add ${version}/Contents/Home/
+done
+
+# Set java version to 8
+jenv global 1.8

@@ -50,3 +50,5 @@ if [[ "$(basename ${(%):-%x})" != "_pipenv" ]]; then
   autoload -U compinit && compinit
   compdef _pipenv pipenv
 fi
+
+if which jenv > /dev/null; then eval "$(jenv init -)"; fi

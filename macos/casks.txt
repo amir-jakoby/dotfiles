@@ -33,3 +33,4 @@ vlc
 webstorm
 whatsapp
 notion
+adoptopenjdk/openjdk/adoptopenjdk8
