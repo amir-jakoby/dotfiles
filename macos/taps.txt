@@ -6,4 +6,5 @@ homebrew/core
 homebrew/services
 johanhaleby/kubetail
 mike-engel/jwt-cli
-newrelic/commune git@source.datanerd.us:commune/newrelic-homebrew  
+adoptopenjdk/openjdk
+newrelic/commune git@source.datanerd.us:commune/newrelic-homebrew

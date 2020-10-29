@@ -11,7 +11,7 @@ bindkey '\ew' kill-region                           # [Esc-w] - Kill from the cu
 bindkey '^k' kill-line                              # [Ctrl-k] - Kill from cursor to end of line
 bindkey -s '\el' 'ls\n'                             # [Esc-l] - run command: ls
 bindkey -s '\e.' '..\n'                             # [Esc-.] - run command: .. (up directory)
-bindkey '^r' history-incremental-search-backward    # [Ctrl-r] - Search backward incrementally for a specified string. The string may begin with ^ to anchor the search to the beginning of the line.
+# bindkey '^r' history-incremental-search-backward    # [Ctrl-r] - Search backward incrementally for a specified string. The string may begin with ^ to anchor the search to the beginning of the line.
 bindkey '^[[5~' up-line-or-history                  # [PageUp] - Up a line of history
 bindkey '^[[6~' down-line-or-history                # [PageDown] - Down a line of history
 
