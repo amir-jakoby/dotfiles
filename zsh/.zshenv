@@ -14,3 +14,4 @@ if [[ "$SHLVL" -eq 1 && ! -o LOGIN && -s "${ZDOTDIR:-$HOME}/.zprofile" ]]; then
 fi
 
 source "${HOME}/.zshenvsecrets"
+source "$HOME/.cargo/env"

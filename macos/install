@@ -20,6 +20,7 @@ if ! command -v brew > /dev/null 2>&1; then
 fi
 
 brew update
+brew install svn
 
 while read -r tap; do
   HOMEBREW_NO_AUTO_UPDATE=1 brew tap ${tap}
@@ -49,9 +50,12 @@ for setup_script in ${CURRENT_SCRIPT_PATH}/setup/*.sh ; do
 done
 
 # Add installed java versions to jenv
+jenv rehash
+mkdir ~/.jenv/versions || true
 for version in /Library/Java/JavaVirtualMachines/* ; do
   jenv add ${version}/Contents/Home/
 done
+jenv rehash
 
 # Set java version to 8
 jenv global 1.8

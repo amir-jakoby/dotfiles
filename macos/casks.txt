@@ -7,12 +7,8 @@ caffeine
 evernote
 flux
 font-3270-nerd-font
-font-3270-nerd-font-mono
 font-hack-nerd-font
-font-hack-nerd-font-mono
 font-source-code-pro-for-powerline
-font-sourcecodepro-nerd-font
-font-sourcecodepro-nerd-font-mono
 gitup
 google-backup-and-sync
 google-chrome

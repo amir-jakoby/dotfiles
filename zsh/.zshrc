@@ -18,6 +18,9 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+
 function {
   export DOTFILES="${HOME}/.dotfiles"
   #
@@ -33,8 +36,8 @@ function {
 }
 
 # Customize to your needs...
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+#eval "$(pyenv init -)"
+#eval "$(pyenv virtualenv-init -)"
 source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc'
 source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc'
 source <(kubectl completion zsh)
@@ -52,3 +55,5 @@ if [[ "$(basename ${(%):-%x})" != "_pipenv" ]]; then
 fi
 
 if which jenv > /dev/null; then eval "$(jenv init -)"; fi
+
+ulimit -n 1000

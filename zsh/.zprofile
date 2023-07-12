@@ -49,6 +49,8 @@ typeset -gU cdpath fpath mailpath path
 
 # Set the list of directories that zsh searches for programs.
 path=(
+  /usr/local/opt/node@14/bin
+  /usr/local/{bin,sbin}
   $HOME/bin
   $GOPATH/bin
   $HOME/.cabal/bin
@@ -56,7 +58,6 @@ path=(
   $HOME/.config/yarn/global/node_modules/.bin
   $HOME/.pyenv/shims
   $HOME/.rbenv/shims
-  /usr/local/{bin,sbin}
   ${HOME}/.cargo/bin
   $path
 )
@@ -89,6 +90,5 @@ if [[ ! -d "$TMPPREFIX" ]]; then
   mkdir -p "$TMPPREFIX"
 fi
 
-export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/.jenv/bin:$PATH"
 export PATH="/usr/local/opt/thrift@0.9/bin:$PATH"
