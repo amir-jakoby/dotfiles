@@ -1,6 +1,0 @@
-[submodule "zsh/zprezto.symlink"]
-	path = zsh/.zprezto
-	url = https://github.com/amir-jakoby/prezto.git
-[submodule "zsh/.zprezto/contrib/fzf"]
-	path = zsh/.zprezto/contrib/fzf
-	url = https://github.com/gpanders/fzf-prezto.git

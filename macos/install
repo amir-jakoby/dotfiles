@@ -22,17 +22,19 @@ fi
 brew update
 brew install svn
 
-while read -r tap; do
-  HOMEBREW_NO_AUTO_UPDATE=1 brew tap ${tap}
-done < "${TAPS_LIST}"
+# echo "Adding taps"
+# while read -r tap; do
+#   HOMEBREW_NO_AUTO_UPDATE=1 brew tap "${tap}"
+# done < "${TAPS_LIST}"
 
-while read -r package; do
-  HOMEBREW_NO_AUTO_UPDATE=1 brew cask install ${package} --no-quarantine
-done < "${CASKS_LIST}"
+echo "Installing casks"
+PACKAGES=$(cat ${CASKS_LIST} | tr "\n" " ")
+echo "packages=${PACKAGES}"
+HOMEBREW_NO_AUTO_UPDATE=1 brew install $(echo ${PACKAGES})
 
-while read -r package; do
-  HOMEBREW_NO_AUTO_UPDATE=1 brew install ${package}
-done < "${PACKAGES_LIST}"
+echo "Installing packages"
+PACKAGES=$(cat ${PACKAGES_LIST} | tr "\n" " ")
+HOMEBREW_NO_AUTO_UPDATE=1 brew install $(echo ${PACKAGES})
 
 
 # Print a warning for any taps that are not committed to taps.txt
@@ -41,7 +43,7 @@ for tap in $(echo "$(cat "${TAPS_LIST}")" "$(cat "${TAPS_LIST}")" "$(brew tap)" 
 done
 
 # Print a warning for any casks that are not committed to casks.txt
-for package in $(echo "$(cat "${CASKS_LIST}")" "$(cat "${CASKS_LIST}")" "$(brew cask list)" | tr ' ' '\n' | sort | uniq -u); do
+for package in $(echo "$(cat "${CASKS_LIST}")" "$(cat "${CASKS_LIST}")" "$(brew list --cask)" | tr ' ' '\n' | sort | uniq -u); do
   echo "Found extraneous installed homebrew cask ${package}; consider adding it to casks.txt."
 done
 
@@ -49,13 +51,13 @@ for setup_script in ${CURRENT_SCRIPT_PATH}/setup/*.sh ; do
    "${setup_script}"
 done
 
-# Add installed java versions to jenv
-jenv rehash
-mkdir ~/.jenv/versions || true
-for version in /Library/Java/JavaVirtualMachines/* ; do
-  jenv add ${version}/Contents/Home/
-done
-jenv rehash
+# # Add installed java versions to jenv
+# jenv rehash
+# mkdir ~/.jenv/versions || true
+# for version in /Library/Java/JavaVirtualMachines/* ; do
+#   jenv add ${version}/Contents/Home/
+# done
+# jenv rehash
 
-# Set java version to 8
-jenv global 1.8
+# # Set java version to 8
+# jenv global 1.8
