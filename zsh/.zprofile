@@ -92,3 +92,5 @@ fi
 
 export PATH="$HOME/.jenv/bin:$PATH"
 export PATH="/usr/local/opt/thrift@0.9/bin:$PATH"
+
+eval "$(/opt/homebrew/bin/brew shellenv)"
