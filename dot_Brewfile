@@ -50,6 +50,15 @@ brew "yq"
 brew "wget"
 brew "htop"
 
+# Modern CLI tools (2025)
+brew "zoxide"      # Smart cd
+brew "atuin"       # Shell history sync
+brew "eza"         # Modern ls
+brew "git-delta"   # Better git diffs
+brew "mise"        # Universal version manager
+brew "lazygit"     # Terminal git UI
+brew "yazi"        # Terminal file manager
+
 # Casks
 cask "1password"
 cask "1password-cli"
