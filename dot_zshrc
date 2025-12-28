@@ -60,8 +60,7 @@ fi
 # Cache expensive completions to avoid running them on every shell start.
 ZSH_COMPLETIONS_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/completions"
 mkdir -p "$ZSH_COMPLETIONS_DIR"
-ZSH_LAZY_DIR="${DOTFILES:-$HOME/dotfiles}/zsh/.zsh/lazy"
-[[ -d "$ZSH_LAZY_DIR" ]] || ZSH_LAZY_DIR="$HOME/dotfiles/zsh/.zsh/lazy"
+ZSH_LAZY_DIR="${ZDOTDIR:-$HOME}/.zsh/lazy"
 
 __lazy_source() {
   local file=$1 init=$2

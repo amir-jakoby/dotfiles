@@ -3,8 +3,6 @@
 
 # Taps
 tap "goreleaser/tap"
-tap "homebrew/bundle"
-tap "homebrew/cask-fonts"
 tap "robusta-dev/krr"
 
 # Core tools
@@ -36,8 +34,9 @@ brew "kubectx"
 brew "stern"
 
 # AWS
+tap "common-fate/granted"
 brew "awscli"
-brew "aws-sso-cli"
+brew "granted"
 brew "chamber"
 
 # Infrastructure
