@@ -1,0 +1,60 @@
+[user]
+	name = {{ .name }}
+	email = {{ onepasswordRead "op://Dotfiles/GitHub/email" }}
+	signingkey = {{ onepasswordRead "op://Dotfiles/GPG/key-id" }}
+[credential]
+	helper = osxkeychain
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+	amend = "!git-amend"
+	checkout-pr = "!git-checkout-pr"
+	get-commit-message = "!git log --format=%B -n 1"
+	up = "!git-update"
+[submodule]
+	recurse = true
+[github]
+	user = amir-jakoby	
+[core]
+	excludesfile = ~/.gitignore.global
+	pager = cat
+
+[color]
+	ui = true
+
+[hub]
+	protocol = ssh
+
+[mergetool]
+	prompt = false
+
+[diff]
+    tool = cursor
+[difftool "cursor"]
+    cmd = cursor --wait --diff $LOCAL $REMOTE
+
+[branch]
+	autosetuprebase = always
+
+[commit]
+	gpgsign = true
+	verbose = true
+
+[tag]
+	gpgsign = true
+
+[push]
+	default = current
+	followTags = true
+
+[url "ssh://git@github.com/"]
+
+[init]
+	defaultBranch = main
+
+[url "git@github.com:"]
+	insteadOf = https://github.com/
+[url "git@github.com:sawmills/"]
+	insteadOf = https://github.com/sawmills/

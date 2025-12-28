@@ -1,0 +1,57 @@
+# -*- mode: sh -*-
+
+#
+# Defines environment variables.
+#
+# Authors:
+#   Sorin Ionescu <sorin.ionescu@gmail.com>
+#   Amir Jakoby <amirjak@gmail.com>
+#
+
+# Ensure that a non-login, non-interactive shell has a defined environment.
+if [[ "$SHLVL" -eq 1 && ! -o LOGIN && -s "${ZDOTDIR:-$HOME}/.zprofile" ]]; then
+  source "${ZDOTDIR:-$HOME}/.zprofile"
+fi
+
+# ============================================================================
+# Secrets from 1Password (managed by chezmoi)
+# ============================================================================
+
+export GORELEASER_KEY={{ onepasswordRead "op://Dotfiles/GoReleaser/key" | quote }}
+export CLERK_KEY_STAGING={{ onepasswordRead "op://Dotfiles/Clerk/staging" | quote }}
+export CLERK_KEY_PREPROD={{ onepasswordRead "op://Dotfiles/Clerk/preprod" | quote }}
+export CLERK_KEY_PROD={{ onepasswordRead "op://Dotfiles/Clerk/prod" | quote }}
+export CLERK_API_KEY=$CLERK_KEY_PROD
+export GITHUB_APPROVER_TOKEN={{ onepasswordRead "op://Dotfiles/GitHub Tokens/approver-token" | quote }}
+
+# ============================================================================
+# Environment variables
+# ============================================================================
+
+export CHAMBER_KMS_KEY_ALIAS=aws/ssm
+
+# Sawmills org IDs
+export STAGING_ORG_ID=REDACTED
+export PREPROD_ORG_ID=REDACTED
+export PROD_ORG_ID=REDACTED
+
+# Customer org IDs
+export SIMILARWEB_ORG_ID=REDACTED
+export VIA_ORG_ID=REDACTED
+export BP_ORG_ID=REDACTED
+export HIBOB_ORG_ID=REDACTED
+export NEXXEN_ORG_ID=REDACTED
+export BIGID_ORG_ID=REDACTED
+export EGNYTE_ORG_ID=REDACTED
+export FIREBLOCKS_ID=REDACTED
+export VARONIS_ORG_ID=REDACTED
+export ZD_ORG_ID=REDACTED
+export APPLIED_SYSTEMS_ID=REDACTED
+export PROD_OLLY_ORG_ID=REDACTED
+export COLLECTORS_ORG_ID=REDACTED
+export CHOICE_HOTEL_ORG=REDACTED
+export BLOCK_ORG_ID=REDACTED
+
+export GOPRIVATE='REDACTED'
+
+export PATH="/opt/homebrew/bin:$PATH"

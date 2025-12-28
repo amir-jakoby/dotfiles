@@ -1,0 +1,210 @@
+# -*- mode: sh -*-
+
+#
+# Executes commands at the start of an interactive session.
+#
+# Author:
+#   Nathan Houle <nathan@nathanhoule.com>
+#
+# Credit to:
+#   Sorin Ionescu <sorin.ionescu@gmail.com>
+#   Zach Holman <zach@zachholman.com>
+#
+
+#autoload -U +X compinit && compinit
+#autoload -U +X bashcompinit && bashcompinit 
+
+# Initialize starship prompt
+eval "$(starship init zsh)"
+
+# eval "$(pyenv init -)"
+# eval "$(pyenv virtualenv-init -)"
+
+# Fast boot: defer optional Prezto modules.
+export ZSH_FAST_BOOT=1
+
+function {
+  export DOTFILES="${HOME}/.dotfiles"
+  #
+  # Zprezto
+  #
+
+  # Load zprezto if it's installed
+  if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
+    source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+  fi
+
+  for config (~/.zsh/*.zsh) source "${config}"
+}
+
+# Load optional Prezto modules shortly after prompt is ready.
+prezto-load-extras() {
+  if (( $+functions[pmodload] )) && (( ${#prezto_extra_modules[@]} )); then
+    pmodload "${prezto_extra_modules[@]}"
+  fi
+  unfunction prezto-load-extras
+}
+if zmodload -i zsh/sched; then
+  sched +1 prezto-load-extras
+else
+  prezto-load-extras
+fi
+
+# Customize to your needs...
+#eval "$(pyenv init -)"
+#eval "$(pyenv virtualenv-init -)"
+
+#source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc'
+#source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc'
+
+# Cache expensive completions to avoid running them on every shell start.
+ZSH_COMPLETIONS_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/completions"
+mkdir -p "$ZSH_COMPLETIONS_DIR"
+ZSH_LAZY_DIR="${DOTFILES:-$HOME/dotfiles}/zsh/.zsh/lazy"
+[[ -d "$ZSH_LAZY_DIR" ]] || ZSH_LAZY_DIR="$HOME/dotfiles/zsh/.zsh/lazy"
+
+__lazy_source() {
+  local file=$1 init=$2
+  [[ -r "$file" ]] && source "$file"
+  (( $+functions[$init] )) && "$init"
+}
+
+__path_prepend() {
+  local dir=$1
+  [[ -n "$dir" ]] || return 0
+  case ":$PATH:" in
+    *":$dir:"*) ;;
+    *) PATH="$dir:$PATH" ;;
+  esac
+}
+
+__path_append() {
+  local dir=$1
+  [[ -n "$dir" ]] || return 0
+  case ":$PATH:" in
+    *":$dir:"*) ;;
+    *) PATH="$PATH:$dir" ;;
+  esac
+}
+
+__update_completion() {
+  local cmd=$1 file=$2
+  (( $+commands[$cmd] )) || return 0
+  if [[ ! -s "$file" || "$commands[$cmd]" -nt "$file" ]]; then
+    "$cmd" completion zsh >| "$file" 2>/dev/null
+  fi
+}
+
+__update_completion kubectl "$ZSH_COMPLETIONS_DIR/_kubectl"
+__update_completion atmos "$ZSH_COMPLETIONS_DIR/_atmos"
+
+[[ -s "$ZSH_COMPLETIONS_DIR/_kubectl" ]] && source "$ZSH_COMPLETIONS_DIR/_kubectl"
+[[ -s "$ZSH_COMPLETIONS_DIR/_atmos" ]] && source "$ZSH_COMPLETIONS_DIR/_atmos"
+
+# __update_completion helm "$ZSH_COMPLETIONS_DIR/_helm"
+# __update_completion oc "$ZSH_COMPLETIONS_DIR/_oc"
+# [[ -s "$ZSH_COMPLETIONS_DIR/_helm" ]] && source "$ZSH_COMPLETIONS_DIR/_helm"
+# [[ -s "$ZSH_COMPLETIONS_DIR/_oc" ]] && source "$ZSH_COMPLETIONS_DIR/_oc"
+
+#source <(pipenv --completion)  # this is slow so I just pasted the result here:
+#compdef pipenv
+_pipenv() {
+  eval $(env COMMANDLINE="${words[1,$CURRENT]}" _PIPENV_COMPLETE=complete-zsh  pipenv)
+}
+if [[ "$(basename ${(%):-%x})" != "_pipenv" ]]; then
+  (( $+functions[compdef] )) && compdef _pipenv pipenv
+fi
+
+# Lazy-load jenv to avoid startup cost.
+if command -v jenv >/dev/null; then
+  jenv() {
+    unset -f jenv
+    __lazy_source "$ZSH_LAZY_DIR/jenv.zsh" __jenv_lazy_init
+    jenv "$@"
+  }
+fi
+
+# Lazy-load conda/pyenv when entering Python projects.
+autoload -Uz add-zsh-hook
+__python_dir_lazy() {
+  if [[ -f pyproject.toml || -f requirements.txt || -f Pipfile || -f setup.py || -d .venv || -f environment.yml || -f .python-version ]]; then
+    [[ -z ${__python_dir_bootstrapped:-} ]] || return 0
+    __python_dir_bootstrapped=1
+    __lazy_source "$ZSH_LAZY_DIR/pyenv.zsh" __pyenv_lazy_init
+    __lazy_source "$ZSH_LAZY_DIR/conda.zsh" __conda_lazy_init
+  fi
+}
+add-zsh-hook chpwd __python_dir_lazy
+__python_dir_lazy
+
+ulimit -n 1000
+
+# >>> conda initialize (lazy) >>>
+if [[ -x "/opt/homebrew/Caskroom/miniconda/base/bin/conda" ]]; then
+  conda() {
+    unset -f conda
+    __lazy_source "$ZSH_LAZY_DIR/conda.zsh" __conda_lazy_init
+    conda "$@"
+  }
+fi
+# <<< conda initialize (lazy) <<<
+
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+__path_prepend "$PYENV_ROOT/shims"
+if command -v pyenv >/dev/null; then
+  pyenv() {
+    unset -f pyenv
+    __lazy_source "$ZSH_LAZY_DIR/pyenv.zsh" __pyenv_lazy_init
+    pyenv "$@"
+  }
+fi
+alias gcs="gh copilot suggest"
+alias gce="gh copilot explain"
+#export GOROOT=/usr/local/go
+#export PATH=$GOROOT/bin:$PATH
+__path_prepend "/opt/homebrew/opt/llvm/bin"
+
+ZSH_GOPATH_CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/gopath"
+if [[ -r "$ZSH_GOPATH_CACHE" ]]; then
+  export GOPATH="$(<"$ZSH_GOPATH_CACHE")"
+else
+  export GOPATH="${GOPATH:-$HOME/go}"
+fi
+__path_append "$GOPATH/bin"
+__path_append "$HOME/Code/sandbox/bin"
+__path_prepend "$HOME/dotfiles/bin/bin"
+
+if command -v go >/dev/null; then
+  go() {
+    unset -f go
+    local new_gopath
+    new_gopath="$(command go env GOPATH 2>/dev/null)"
+    if [[ -n "$new_gopath" && "$new_gopath" != "$GOPATH" ]]; then
+      export GOPATH="$new_gopath"
+      mkdir -p "${ZSH_GOPATH_CACHE:h}"
+      printf '%s' "$GOPATH" >| "$ZSH_GOPATH_CACHE"
+      __path_append "$GOPATH/bin"
+    fi
+    go "$@"
+  }
+fi
+
+setopt prompt_subst interactive_comments
+
+alias openpr="$HOME/dotfiles/scripts/open-pr.sh"
+
+alias cat="bat --paging=never"
+
+# Lazy-load 1Password CLI hooks and completions.
+if [[ -r "$HOME/.config/op/plugins.sh" ]]; then
+  op() {
+    unset -f op
+    __lazy_source "$ZSH_LAZY_DIR/op.zsh" __op_lazy_init
+    op "$@"
+  }
+fi
+
+
+# amp
+export PATH="$HOME/.local/bin:$PATH"
