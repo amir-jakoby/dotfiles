@@ -56,5 +56,10 @@ export GOPRIVATE='REDACTED'
 
 export PATH="/opt/homebrew/bin:$PATH"
 
-# Add homebrew completions to fpath BEFORE compinit runs
-fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+# Add homebrew and granted completions to fpath BEFORE compinit runs
+fpath=(
+  /opt/homebrew/share/zsh/site-functions
+  ~/.granted/zsh_autocomplete/assume
+  ~/.granted/zsh_autocomplete/granted
+  $fpath
+)
