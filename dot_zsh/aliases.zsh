@@ -42,3 +42,6 @@ alias ag="ag --path-to-ignore=${HOME}/.agignore"
 
 # Docker aliases
 alias dc="docker-compose"
+
+# Remote operator default endpoint
+alias remote-operator="remote-operator -a https://REDACTED_INTERNAL_URL"
