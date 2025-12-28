@@ -33,6 +33,7 @@ fi
 # If hub is installed, use it as a Git wrapper
 if [[ -x $(which hub) ]]; then
   eval "$(hub alias -s)"
+  compdef hub=git
 fi
 
 

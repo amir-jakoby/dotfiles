@@ -46,6 +46,7 @@ if command -v eza &> /dev/null; then
   alias la='eza -la --git --icons'
   alias lt='eza --tree --level=2 --icons'
   alias lta='eza --tree --level=2 -a --icons'
+
 fi
 
 # ============================================================================

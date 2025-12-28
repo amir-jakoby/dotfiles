@@ -55,3 +55,6 @@ export BLOCK_ORG_ID=REDACTED
 export GOPRIVATE='REDACTED'
 
 export PATH="/opt/homebrew/bin:$PATH"
+
+# Add homebrew completions to fpath BEFORE compinit runs
+fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
