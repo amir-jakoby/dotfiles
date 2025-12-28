@@ -1,0 +1,996 @@
+{
+    "workbench.colorTheme": "Default Dark Modern",
+    "editor.fontSize": 14,
+    "editor.defaultFormatter": "gofenix.go-lines",
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "editor.fontFamily": "FiraCode-Retina, Hack Nerd Font, Menlo, Monaco, 'Courier New', monospace",
+    "terminal.integrated.fontSize": 14,
+    "editor.guides.bracketPairs": true,
+    "flake8.args": [
+        "--max-line-length=120"
+    ],
+    "[python]": {
+        "editor.defaultFormatter": "trunk.io"
+    },
+    "[go]": {
+        "editor.defaultFormatter": "golang.go"
+    },
+    "go.toolsManagement.autoUpdate": true,
+    "github.copilot.advanced": {},
+    "github.copilot.editor.enableAutoCompletions": true,
+    "terminal.integrated.copyOnSelection": true,
+    "vs-kubernetes": {
+        "vscode-kubernetes.minikube-path-mac": "/Users/amirjakoby/.vs-kubernetes/tools/minikube/darwin-arm64/minikube",
+        "vscode-kubernetes.helm-path-mac": "/Users/amirjakoby/.vs-kubernetes/tools/helm/darwin-arm64/helm",
+        "vs-kubernetes.crd-code-completion": "enabled"
+    },
+    "kubernetes-yaml-formatter.compactSequenceIndent": false,
+    "[yaml]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "editor.autoIndent": "keep",
+        "diffEditor.ignoreTrimWhitespace": false,
+        "editor.defaultFormatter": "redhat.vscode-yaml",
+        "editor.formatOnSave": false,
+        "editor.quickSuggestions": {
+            "other": true,
+            "comments": false,
+            "strings": true
+        }
+    },
+    "files.exclude": {
+        "**/.trunk/*actions/": true,
+        "**/.trunk/*logs/": true,
+        "**/.trunk/*notifications/": true,
+        "**/.trunk/*out/": true,
+        "**/.trunk/*plugins/": true
+    },
+    "files.watcherExclude": {
+        "**/.trunk/*actions/": true,
+        "**/.trunk/*logs/": true,
+        "**/.trunk/*notifications/": true,
+        "**/.trunk/*out/": true,
+        "**/.trunk/*plugins/": true
+    },
+    "go.languageServerFlags": [],
+    "indentRainbow.indentSetter": {},
+    "files.autoSaveWorkspaceFilesOnly": true,
+    "files.autoSave": "onFocusChange",
+    "git.autofetch": true,
+    "githubPullRequests.pullBranch": "never",
+    "makefile.configureOnOpen": true,
+    "[terraform]": {
+        "editor.defaultFormatter": "hashicorp.terraform"
+    },
+    "git.replaceTagsWhenPull": true,
+    "trunk.showPreexistingIssues": true,
+    "githubPullRequests.terminalLinksHandler": "github",
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "editor.fontLigatures": true,
+    "terminal.integrated.fontFamily": "FiraCode-Retina",
+    "debug.console.fontFamily": "FiraCode-Retina",
+    "debug.console.fontSize": 14,
+    "scm.inputFontFamily": "FiraCode-Retina",
+    "scm.inputFontSize": 14,
+    "chat.editor.fontFamily": "FiraCode-Retina",
+    "chat.editor.fontSize": 14,
+    "window.zoomLevel": 0.6,
+    "[mdx]": {
+        "editor.defaultFormatter": "trunk.io"
+    },
+    "[markdown]": {
+        "editor.defaultFormatter": "trunk.io"
+    },
+    "gitlens.launchpad.indicator.enabled": false,
+    "terminal.integrated.shellIntegration.history": 1000,
+    "terminal.integrated.scrollback": 10000,
+    "python.languageServer": "None",
+    "go.testEnvVars": {
+        "TESTBED_DURATION": "30",
+        "RUN_TESTBED": "1",
+    },
+    "go.toolsEnvVars": {},
+    "python.analysis.packageIndexDepths": [
+        {
+            "name": "sklearn",
+            "depth": 2
+        },
+        {
+            "name": "matplotlib",
+            "depth": 2
+        },
+        {
+            "name": "scipy",
+            "depth": 2
+        },
+        {
+            "name": "django",
+            "depth": 2
+        },
+        {
+            "name": "flask",
+            "depth": 2
+        },
+        {
+            "name": "fastapi",
+            "depth": 2
+        }
+    ],
+    "cursor.aipreview.enabled": true,
+    "update.releaseTrack": "prerelease",
+    "editor.accessibilitySupport": "off",
+    "cursor.composer.collapsePaneInputBoxPills": true,
+    "cursor.composer.shouldAllowCustomModes": true,
+    "cursor.composer.shouldChimeAfterChatFinishes": true,
+    "trunk.addToolsToPath": true,
+    "trunk.numJobs": 2,
+    "security.promptForLocalFileProtocolHandling": false,
+    "yaml.schemas": {
+        "https://raw.githubusercontent.com/open-telemetry/opentelemetry-collector/refs/heads/main/cmd/mdatagen/metadata-schema.yaml": "metadata.yaml"
+    },
+    "editor.largeFileOptimizations": false,
+    "[dockercompose]": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "editor.autoIndent": "advanced",
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "[github-actions-workflow]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml"
+    },
+    "cursor.agent_layout_browser_beta_setting": true,
+    "chatgpt.cliExecutable": "",
+    "git.confirmSync": false,
+    "amp.url": "https://ampcode.com/",
+    "editor.wordBasedSuggestions": "off",
+    "amp.tab.enabled": false,
+    "amp.tryOpus": false,
+    "amp.mcpServers": {
+        "playwright": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@playwright/mcp@latest",
+                "--headless",
+                "--isolated"
+            ],
+            "_target": "global"
+        },
+        "AWS_Documentation": {
+            "command": "uvx",
+            "args": [
+                "awslabs.aws-documentation-mcp-server@latest"
+            ],
+            "env": {
+                "FASTMCP_LOG_LEVEL": "ERROR",
+                "AWS_DOCUMENTATION_PARTITION": "aws"
+            },
+            "_target": "global"
+        },
+        "Chrome_DevTools": {
+            "command": "npx",
+            "args": [
+                "chrome-devtools-mcp@latest"
+            ],
+            "_target": "global"
+        },
+        "Linear": {
+            "url": "https://mcp.linear.app/sse",
+            "_target": "global"
+        },
+        "Notion": {
+            "url": "https://mcp.notion.com/mcp"
+        },
+        "Guides": {
+            "command": "uv",
+            "args": [
+                "run",
+                "--directory",
+                "/Users/amirjakoby/Code/sawmills-guides-mcp",
+                "mcp",
+                "run",
+                "main.py"
+            ],
+            "_target": "global"
+        }
+    },
+    "amp.permissions": [
+        {
+            "tool": "Bash",
+            "action": "ask",
+            "matches": {
+                "cmd": [
+                    "*rm*rf*",
+                    "*find*exec*",
+                    "*find*delete*",
+                    "*git*push*"
+                ]
+            }
+        },
+        {
+            "tool": "*",
+            "action": "allow",
+            "matches": {}
+        },
+        {
+            "tool": "Bash",
+            "action": "ask",
+            "matches": {
+                "cmd": [
+                    "*rm*rf*",
+                    "*find*exec*",
+                    "*find*delete*",
+                    "*git*push*"
+                ]
+            }
+        },
+        {
+            "tool": "*",
+            "action": "allow",
+            "matches": {}
+        },
+        {
+            "tool": "Bash",
+            "action": "ask",
+            "matches": {
+                "cmd": [
+                    "*rm*rf*",
+                    "*find*exec*",
+                    "*find*delete*",
+                    "*git*push*"
+                ]
+            }
+        },
+        {
+            "tool": "*",
+            "action": "allow",
+            "matches": {}
+        },
+        {
+            "tool": "Bash",
+            "action": "ask",
+            "matches": {
+                "cmd": [
+                    "*rm*rf*",
+                    "*find*exec*",
+                    "*find*delete*",
+                    "*git*push*"
+                ]
+            }
+        },
+        {
+            "tool": "*",
+            "action": "allow",
+            "matches": {}
+        },
+        {
+            "tool": "Bash",
+            "action": "ask",
+            "matches": {
+                "cmd": [
+                    "*rm*rf*",
+                    "*find*exec*",
+                    "*find*delete*",
+                    "*git*push*"
+                ]
+            }
+        },
+        {
+            "tool": "*",
+            "action": "allow",
+            "matches": {}
+        },
+        {
+            "tool": "Bash",
+            "action": "ask",
+            "matches": {
+                "cmd": "*git*push*"
+            }
+        },
+        {
+            "tool": "mcp__*",
+            "action": "allow"
+        },
+        {
+            "tool": "read_mcp_resource",
+            "action": "allow"
+        },
+        {
+            "tool": "tb__*",
+            "action": "allow"
+        },
+        {
+            "tool": "Bash",
+            "matches": {
+                "cmd": "/^(.*\\s+)?(bazel|ibazel)\\s+.*\\/\\/[^\\s]*.*$/"
+            },
+            "action": "allow"
+        },
+        {
+            "tool": "Bash",
+            "matches": {
+                "cmd": [
+                    "ls",
+                    "ls *",
+                    "dir",
+                    "dir *",
+                    "cat *",
+                    "head *",
+                    "tail *",
+                    "less *",
+                    "more *",
+                    "grep *",
+                    "egrep *",
+                    "fgrep *",
+                    "tree",
+                    "tree *",
+                    "file *",
+                    "wc *",
+                    "pwd",
+                    "stat *",
+                    "du *",
+                    "df *",
+                    "ps *",
+                    "top",
+                    "htop",
+                    "echo *",
+                    "printenv *",
+                    "id",
+                    "which *",
+                    "whereis *",
+                    "date",
+                    "cal *",
+                    "uptime",
+                    "free *",
+                    "ping *",
+                    "dig *",
+                    "nslookup *",
+                    "host *",
+                    "netstat *",
+                    "ss *",
+                    "lsof *",
+                    "ifconfig *",
+                    "ip *",
+                    "man *",
+                    "info *",
+                    "mkdir *",
+                    "touch *",
+                    "uname *",
+                    "whoami",
+                    "go version",
+                    "go env *",
+                    "go help *",
+                    "cargo version",
+                    "cargo --version",
+                    "cargo help *",
+                    "rustc --version",
+                    "rustc --help",
+                    "rustc --explain *",
+                    "javac --version",
+                    "javac -version",
+                    "javac -help",
+                    "javac --help",
+                    "dotnet --info",
+                    "dotnet --version",
+                    "dotnet --help",
+                    "dotnet help *",
+                    "gcc --version",
+                    "gcc -v",
+                    "gcc --help",
+                    "gcc -dumpversion",
+                    "g++ --version",
+                    "g++ -v",
+                    "g++ --help",
+                    "g++ -dumpversion",
+                    "clang --version",
+                    "clang --help",
+                    "clang++ --version",
+                    "clang++ --help",
+                    "python -V",
+                    "python --version",
+                    "python -h",
+                    "python --help",
+                    "python3 -V",
+                    "python3 --version",
+                    "python3 -h",
+                    "python3 --help",
+                    "ruby -v",
+                    "ruby --version",
+                    "ruby -h",
+                    "ruby --help",
+                    "node -v",
+                    "node --version",
+                    "node -h",
+                    "node --help",
+                    "npm --help",
+                    "npm --version",
+                    "npm -v",
+                    "npm help *",
+                    "yarn --help",
+                    "yarn --version",
+                    "yarn -v",
+                    "yarn help *",
+                    "pnpm --help",
+                    "pnpm --version",
+                    "pnpm -v",
+                    "pnpm help *",
+                    "pytest -h",
+                    "pytest --help",
+                    "pytest --version",
+                    "jest --help",
+                    "jest --version",
+                    "mocha --help",
+                    "mocha --version",
+                    "make --version",
+                    "make --help",
+                    "docker --version",
+                    "docker --help",
+                    "docker version",
+                    "docker help *",
+                    "git --version",
+                    "git --help",
+                    "git help *",
+                    "git version"
+                ]
+            },
+            "action": "allow"
+        },
+        {
+            "tool": "Bash",
+            "matches": {
+                "cmd": [
+                    "go test *",
+                    "go run *",
+                    "go build *",
+                    "go vet *",
+                    "go fmt *",
+                    "go list *",
+                    "cargo test *",
+                    "cargo run *",
+                    "cargo build *",
+                    "cargo check *",
+                    "cargo fmt *",
+                    "cargo tree *",
+                    "make -n *",
+                    "make --dry-run *",
+                    "mvn test *",
+                    "mvn verify *",
+                    "mvn dependency:tree *",
+                    "gradle tasks *",
+                    "gradle dependencies *",
+                    "gradle properties *",
+                    "dotnet test *",
+                    "dotnet list *",
+                    "python -c *",
+                    "ruby -e *",
+                    "node -e *",
+                    "npm list *",
+                    "npm ls *",
+                    "npm outdated *",
+                    "npm test*",
+                    "npm run*",
+                    "npm view *",
+                    "npm info *",
+                    "yarn list*",
+                    "yarn ls *",
+                    "yarn info *",
+                    "yarn test*",
+                    "yarn run *",
+                    "yarn why *",
+                    "pnpm list*",
+                    "pnpm ls *",
+                    "pnpm outdated *",
+                    "pnpm test*",
+                    "pnpm run *",
+                    "pytest --collect-only *",
+                    "jest --listTests *",
+                    "jest --showConfig *",
+                    "mocha --list *",
+                    "git status*",
+                    "git show *",
+                    "git diff*",
+                    "git grep *",
+                    "git branch *",
+                    "git tag *",
+                    "git remote -v *",
+                    "git rev-parse --is-inside-work-tree *",
+                    "git rev-parse --show-toplevel *",
+                    "git config --list *",
+                    "git log *"
+                ]
+            },
+            "action": "allow"
+        },
+        {
+            "tool": "Bash",
+            "matches": {
+                "cmd": [
+                    "./gradlew *",
+                    "./mvnw *",
+                    "./build.sh *",
+                    "./configure *",
+                    "cmake *",
+                    "./node_modules/.bin/tsc *",
+                    "./node_modules/.bin/eslint *",
+                    "./node_modules/.bin/prettier *",
+                    "prettier *",
+                    "./node_modules/.bin/tailwindcss *",
+                    "./node_modules/.bin/tsx *",
+                    "./node_modules/.bin/vite *",
+                    "bun *",
+                    "tsx *",
+                    "vite *"
+                ]
+            },
+            "action": "allow"
+        },
+        {
+            "tool": "Bash",
+            "matches": {
+                "cmd": [
+                    ".venv/bin/activate *",
+                    ".venv/Scripts/activate *",
+                    "source .venv/bin/activate *",
+                    "source venv/bin/activate *",
+                    "pip list *",
+                    "pip show *",
+                    "pip check *",
+                    "pip freeze *",
+                    "uv *",
+                    "poetry show *",
+                    "poetry check *",
+                    "pipenv check *"
+                ]
+            },
+            "action": "allow"
+        },
+        {
+            "tool": "Bash",
+            "matches": {
+                "cmd": [
+                    "asdf list *",
+                    "asdf current *",
+                    "asdf which *",
+                    "mise list *",
+                    "mise current *",
+                    "mise which *",
+                    "mise use *",
+                    "rbenv version *",
+                    "rbenv versions *",
+                    "rbenv which *",
+                    "nvm list *",
+                    "nvm current *",
+                    "nvm which *"
+                ]
+            },
+            "action": "allow"
+        },
+        {
+            "tool": "Bash",
+            "matches": {
+                "cmd": [
+                    "./test*",
+                    "./run_tests.sh *",
+                    "./run_*_tests.sh *",
+                    "vitest *",
+                    "bundle exec rspec *",
+                    "bundle exec rubocop *",
+                    "rspec *",
+                    "rubocop *",
+                    "swiftlint *",
+                    "clippy *",
+                    "ruff *",
+                    "black *",
+                    "isort *",
+                    "mypy *",
+                    "flake8 *",
+                    "bandit *",
+                    "safety *",
+                    "biome check *",
+                    "biome format *"
+                ]
+            },
+            "action": "allow"
+        },
+        {
+            "tool": "Bash",
+            "matches": {
+                "cmd": [
+                    "rails server *",
+                    "rails s *",
+                    "bin/rails server *",
+                    "bin/rails s *",
+                    "flask run *",
+                    "django-admin runserver *",
+                    "python manage.py runserver *",
+                    "uvicorn *",
+                    "streamlit run *"
+                ]
+            },
+            "action": "allow"
+        },
+        {
+            "tool": "Bash",
+            "matches": {
+                "cmd": [
+                    "bin/rails db:status",
+                    "bin/rails db:version",
+                    "rails db:rollback *",
+                    "rails db:status *",
+                    "rails db:version *",
+                    "alembic current *",
+                    "alembic history *",
+                    "bundle exec rails db:status",
+                    "bundle exec rails db:version"
+                ]
+            },
+            "action": "allow"
+        },
+        {
+            "tool": "Bash",
+            "matches": {
+                "cmd": [
+                    "docker ps *",
+                    "docker images *",
+                    "docker logs *",
+                    "docker inspect *",
+                    "docker info *",
+                    "docker stats *",
+                    "docker system df *",
+                    "docker system info *",
+                    "podman ps *",
+                    "podman images *",
+                    "podman logs *",
+                    "podman inspect *",
+                    "podman info *"
+                ]
+            },
+            "action": "allow"
+        },
+        {
+            "tool": "Bash",
+            "matches": {
+                "cmd": [
+                    "aws --version *",
+                    "aws configure list *",
+                    "aws sts get-caller-identity *",
+                    "aws s3 ls *",
+                    "gcloud config list *",
+                    "gcloud auth list *",
+                    "gcloud projects list *",
+                    "az account list *",
+                    "az account show *",
+                    "kubectl get *",
+                    "kubectl describe *",
+                    "kubectl logs *",
+                    "kubectl version *",
+                    "helm list *",
+                    "helm status *",
+                    "helm version *"
+                ]
+            },
+            "action": "allow"
+        },
+        {
+            "tool": "Bash",
+            "matches": {
+                "cmd": [
+                    "swift build *",
+                    "swift test *",
+                    "zig build *",
+                    "zig build test*",
+                    "kotlinc *",
+                    "scalac *",
+                    "javac *",
+                    "javap *",
+                    "clang *",
+                    "jar *",
+                    "sbt *",
+                    "gradle *",
+                    "bazel build *",
+                    "bazel test *",
+                    "bazel run *",
+                    "mix *",
+                    "lua *",
+                    "ruby *",
+                    "php *"
+                ]
+            },
+            "action": "allow"
+        },
+        {
+            "tool": "Bash",
+            "matches": {
+                "cmd": [
+                    "mkdir -p *",
+                    "chmod +x *",
+                    "dos2unix *",
+                    "unix2dos *",
+                    "ln -s *"
+                ]
+            },
+            "action": "allow"
+        },
+        {
+            "tool": "Bash",
+            "matches": {
+                "cmd": [
+                    "for *",
+                    "while *",
+                    "do *",
+                    "done *",
+                    "if *",
+                    "then *",
+                    "else *",
+                    "elif *",
+                    "fi *",
+                    "case *",
+                    "esac *",
+                    "in *",
+                    "function *",
+                    "select *",
+                    "until *",
+                    "{ *",
+                    "} *",
+                    "[[ *",
+                    "]] *"
+                ]
+            },
+            "action": "ask"
+        },
+        {
+            "tool": "Bash",
+            "matches": {
+                "cmd": "/^find(?!.*(-delete|-exec|-execdir)).*$/"
+            },
+            "action": "allow"
+        },
+        {
+            "tool": "Bash",
+            "matches": {
+                "cmd": "/^(echo|ls|pwd|date|whoami|id|uname)\\s.*[&|;].*\\s*(echo|ls|pwd|date|whoami|id|uname)($|\\s.*)/"
+            },
+            "action": "allow"
+        },
+        {
+            "tool": "Bash",
+            "matches": {
+                "cmd": "/^(cat|grep|head|tail|less|more|find)\\s.*\\|\\s*(grep|head|tail|less|more|wc|sort|uniq)($|\\s.*)/"
+            },
+            "action": "allow"
+        },
+        {
+            "tool": "Bash",
+            "matches": {
+                "cmd": "/^rm\\s+.*(-[rf].*-[rf]|-[rf]{2,}|--recursive.*--force|--force.*--recursive).*$/"
+            },
+            "action": "ask"
+        },
+        {
+            "tool": "Bash",
+            "matches": {
+                "cmd": "/^find.*(-delete|-exec|-execdir).*$/"
+            },
+            "action": "ask"
+        },
+        {
+            "tool": "Bash",
+            "matches": {
+                "cmd": "/^(ls|cat|grep|head|tail|file|stat)\\s+[^/]*$/"
+            },
+            "action": "allow"
+        },
+        {
+            "tool": "Bash",
+            "matches": {
+                "cmd": "/^(?!.*(rm|mv|cp|chmod|chown|sudo|su|dd)\\b).*/dev/(null|zero|stdout|stderr|stdin).*$/"
+            },
+            "action": "allow"
+        },
+        {
+            "tool": "Bash",
+            "matches": {
+                "cmd": "/(^|\\s)(\\/(?!dev\\/(null|zero|stdout|stderr|stdin))[^\\s]*|\\.\\.\\/)(?![^\\s]*\\.(log|txt|md|json|yml|yaml)$)/"
+            },
+            "action": "ask"
+        },
+        {
+            "tool": "Bash",
+            "action": "ask"
+        },
+        {
+            "tool": "Glob",
+            "action": "allow"
+        },
+        {
+            "tool": "Task",
+            "action": "allow"
+        },
+        {
+            "tool": "chat_llm",
+            "action": "allow"
+        },
+        {
+            "tool": "finder",
+            "action": "allow"
+        },
+        {
+            "tool": "fast_finder",
+            "action": "allow"
+        },
+        {
+            "tool": "xai_finder",
+            "action": "allow"
+        },
+        {
+            "tool": "kimiK2_finder",
+            "action": "allow"
+        },
+        {
+            "tool": "gossip_finder",
+            "action": "allow"
+        },
+        {
+            "tool": "sonoma_finder",
+            "action": "allow"
+        },
+        {
+            "tool": "get_diagnostics",
+            "action": "allow"
+        },
+        {
+            "tool": "Bash",
+            "action": "allow"
+        },
+        {
+            "tool": "InteractiveShell",
+            "action": "allow"
+        },
+        {
+            "tool": "oracle",
+            "action": "allow"
+        },
+        {
+            "tool": "mermaid",
+            "action": "allow"
+        },
+        {
+            "tool": "todo_read",
+            "action": "allow"
+        },
+        {
+            "tool": "todo_write",
+            "action": "allow"
+        },
+        {
+            "tool": "read_web_page",
+            "action": "allow"
+        },
+        {
+            "tool": "create_file",
+            "action": "allow"
+        },
+        {
+            "tool": "glob",
+            "action": "allow"
+        },
+        {
+            "tool": "Glob",
+            "action": "allow"
+        },
+        {
+            "tool": "undo_edit",
+            "action": "allow"
+        },
+        {
+            "tool": "Read",
+            "action": "allow"
+        },
+        {
+            "tool": "edit_file",
+            "action": "allow"
+        },
+        {
+            "tool": "delete_file",
+            "action": "allow"
+        },
+        {
+            "tool": "format_file",
+            "action": "allow"
+        },
+        {
+            "tool": "web_search",
+            "action": "allow"
+        },
+        {
+            "tool": "Grep",
+            "action": "allow"
+        },
+        {
+            "tool": "search_documents",
+            "action": "allow"
+        },
+        {
+            "tool": "get_document",
+            "action": "allow"
+        },
+        {
+            "tool": "Check",
+            "action": "allow"
+        },
+        {
+            "tool": "code_review",
+            "action": "allow"
+        },
+        {
+            "tool": "kraken",
+            "action": "allow"
+        },
+        {
+            "tool": "librarian",
+            "action": "allow"
+        },
+        {
+            "tool": "bookkeeper",
+            "action": "allow"
+        },
+        {
+            "tool": "read_thread",
+            "action": "allow"
+        },
+        {
+            "tool": "read_artifact",
+            "action": "allow"
+        },
+        {
+            "tool": "edit_artifact",
+            "action": "allow"
+        },
+        {
+            "tool": "read_plan",
+            "action": "allow"
+        },
+        {
+            "tool": "edit_plan",
+            "action": "allow"
+        },
+        {
+            "tool": "skill",
+            "action": "allow"
+        }
+    ],
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "amp.tools.disable": [
+        "mcp__Chrome_DevTools__click",
+        "mcp__Chrome_DevTools__close_page",
+        "mcp__Chrome_DevTools__drag",
+        "mcp__Chrome_DevTools__emulate",
+        "mcp__Chrome_DevTools__evaluate_script",
+        "mcp__Chrome_DevTools__fill",
+        "mcp__Chrome_DevTools__fill_form",
+        "mcp__Chrome_DevTools__get_console_message",
+        "mcp__Chrome_DevTools__get_network_request",
+        "mcp__Chrome_DevTools__handle_dialog",
+        "mcp__Chrome_DevTools__hover",
+        "mcp__Chrome_DevTools__list_console_messages",
+        "mcp__Chrome_DevTools__list_network_requests",
+        "mcp__Chrome_DevTools__list_pages",
+        "mcp__Chrome_DevTools__navigate_page",
+        "mcp__Chrome_DevTools__new_page",
+        "mcp__Chrome_DevTools__performance_analyze_insight",
+        "mcp__Chrome_DevTools__performance_start_trace",
+        "mcp__Chrome_DevTools__performance_stop_trace",
+        "mcp__Chrome_DevTools__press_key",
+        "mcp__Chrome_DevTools__resize_page",
+        "mcp__Chrome_DevTools__select_page",
+        "mcp__Chrome_DevTools__take_screenshot",
+        "mcp__Chrome_DevTools__take_snapshot",
+        "mcp__Chrome_DevTools__upload_file",
+        "mcp__Chrome_DevTools__wait_for"
+    ],
+    "gitlens.plusFeatures.enabled": false,
+}

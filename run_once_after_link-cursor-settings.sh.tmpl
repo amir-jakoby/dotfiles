@@ -1,0 +1,11 @@
+#!/bin/bash
+# Link Cursor settings to chezmoi-managed location
+{{ if eq .chezmoi.os "darwin" -}}
+CURSOR_DIR="${HOME}/Library/Application Support/Cursor/User"
+
+if [[ -d "$CURSOR_DIR" ]]; then
+  echo "Linking Cursor settings..."
+  ln -sf ~/.config/cursor/settings.json "$CURSOR_DIR/settings.json"
+  ln -sf ~/.config/cursor/keybindings.json "$CURSOR_DIR/keybindings.json"
+fi
+{{ end -}}
