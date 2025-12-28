@@ -35,7 +35,6 @@ prezto_modules=(
   'spectrum'
   'utility'
   'completion'
-  'prompt'
 )
 
 prezto_extra_modules=(
@@ -48,7 +47,6 @@ prezto_extra_modules=(
   'history-substring-search'
   'autosuggestions'
   'ssh'
-  'fzf'
 )
 
 [[ -z ${ZSH_FAST_BOOT:-} ]] && prezto_modules+=("${prezto_extra_modules[@]}")
