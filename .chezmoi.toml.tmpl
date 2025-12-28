@@ -1,0 +1,12 @@
+{{- $machine := promptStringOnce . "machine" "Machine type (personal/work)" "personal" -}}
+{{- $email := promptStringOnce . "email" "Email address" "amirjak@gmail.com" -}}
+{{- $name := promptStringOnce . "name" "Full name" "Amir Jakoby" -}}
+
+[onepassword]
+  command = "op"
+  prompt = false
+
+[data]
+  machine = {{ $machine | quote }}
+  email = {{ $email | quote }}
+  name = {{ $name | quote }}

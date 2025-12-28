@@ -1,0 +1,65 @@
+# Homebrew Bundle - managed by chezmoi
+# Run: brew bundle --global
+
+# Taps
+tap "goreleaser/tap"
+tap "homebrew/bundle"
+tap "homebrew/cask-fonts"
+tap "robusta-dev/krr"
+
+# Core tools
+brew "chezmoi"
+brew "stow"
+brew "git"
+brew "gh"
+
+# Shell
+brew "zsh"
+brew "starship"
+brew "fzf"
+brew "bat"
+brew "ripgrep"
+brew "tree"
+
+# Dev tools
+brew "go"
+brew "node"
+brew "python@3.13"
+brew "uv"
+brew "rust"
+
+# Kubernetes
+brew "kubernetes-cli"
+brew "helm"
+brew "k9s"
+brew "kubectx"
+brew "stern"
+
+# AWS
+brew "awscli"
+brew "aws-sso-cli"
+brew "chamber"
+
+# Infrastructure
+brew "terraform"
+brew "atmos"
+
+# Utilities
+brew "jq"
+brew "yq"
+brew "wget"
+brew "htop"
+
+# Casks
+cask "1password"
+cask "1password-cli"
+cask "ghostty"
+cask "arc"
+cask "cursor"
+cask "raycast"
+cask "rectangle"
+cask "slack"
+cask "discord"
+cask "notion"
+cask "spotify"
+cask "orbstack"

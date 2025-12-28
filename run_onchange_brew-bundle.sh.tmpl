@@ -1,0 +1,8 @@
+#!/bin/bash
+# Run brew bundle when Brewfile changes (macOS only)
+# hash: {{ include "dot_Brewfile" | sha256sum }}
+{{ if eq .chezmoi.os "darwin" -}}
+
+echo "Brewfile changed, running brew bundle..."
+brew bundle --global || true
+{{ end -}}
