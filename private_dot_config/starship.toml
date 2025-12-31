@@ -175,7 +175,10 @@ symbol = " "
 symbol = "󰏗 "
 
 [python]
-symbol = " "
+symbol = " "
+detect_extensions = ["py"]
+detect_files = [".python-version", "Pipfile", "pyproject.toml", "requirements.txt", "setup.py", "tox.ini"]
+python_binary = []  # Don't execute Python to detect version (pyenv shims are slow)
 
 [rlang]
 symbol = "󰟔 "
