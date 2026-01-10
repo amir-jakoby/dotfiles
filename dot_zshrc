@@ -96,9 +96,11 @@ __update_completion() {
 
 __update_completion kubectl "$ZSH_COMPLETIONS_DIR/_kubectl"
 __update_completion atmos "$ZSH_COMPLETIONS_DIR/_atmos"
+__update_completion drata-cli "$ZSH_COMPLETIONS_DIR/_drata-cli"
 
 [[ -s "$ZSH_COMPLETIONS_DIR/_kubectl" ]] && source "$ZSH_COMPLETIONS_DIR/_kubectl"
 [[ -s "$ZSH_COMPLETIONS_DIR/_atmos" ]] && source "$ZSH_COMPLETIONS_DIR/_atmos"
+[[ -s "$ZSH_COMPLETIONS_DIR/_drata-cli" ]] && source "$ZSH_COMPLETIONS_DIR/_drata-cli"
 
 # __update_completion helm "$ZSH_COMPLETIONS_DIR/_helm"
 # __update_completion oc "$ZSH_COMPLETIONS_DIR/_oc"
