@@ -96,11 +96,18 @@ __update_completion() {
 
 __update_completion kubectl "$ZSH_COMPLETIONS_DIR/_kubectl"
 __update_completion atmos "$ZSH_COMPLETIONS_DIR/_atmos"
-__update_completion drata-cli "$ZSH_COMPLETIONS_DIR/_drata-cli"
+__update_completion drata "$ZSH_COMPLETIONS_DIR/_drata"
 
 [[ -s "$ZSH_COMPLETIONS_DIR/_kubectl" ]] && source "$ZSH_COMPLETIONS_DIR/_kubectl"
 [[ -s "$ZSH_COMPLETIONS_DIR/_atmos" ]] && source "$ZSH_COMPLETIONS_DIR/_atmos"
-[[ -s "$ZSH_COMPLETIONS_DIR/_drata-cli" ]] && source "$ZSH_COMPLETIONS_DIR/_drata-cli"
+[[ -s "$ZSH_COMPLETIONS_DIR/_drata" ]] && source "$ZSH_COMPLETIONS_DIR/_drata"
+
+# clerk uses 'completions' not 'completion'
+if (( $+commands[clerk] )); then
+  [[ ! -s "$ZSH_COMPLETIONS_DIR/_clerk" || "$commands[clerk]" -nt "$ZSH_COMPLETIONS_DIR/_clerk" ]] && \
+    clerk completions zsh >| "$ZSH_COMPLETIONS_DIR/_clerk" 2>/dev/null
+  [[ -s "$ZSH_COMPLETIONS_DIR/_clerk" ]] && source "$ZSH_COMPLETIONS_DIR/_clerk"
+fi
 
 # __update_completion helm "$ZSH_COMPLETIONS_DIR/_helm"
 # __update_completion oc "$ZSH_COMPLETIONS_DIR/_oc"
@@ -209,3 +216,10 @@ fi
 
 # amp
 export PATH="$HOME/.local/bin:$PATH"
+
+# custom scripts
+export PATH="$HOME/executable_bin:$PATH"
+
+# opencode
+export PATH="$HOME/.opencode/bin:$PATH"
+export PATH="/opt/homebrew/sbin:$PATH"

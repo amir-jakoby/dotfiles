@@ -10,7 +10,8 @@
   "plugin": [
     "oh-my-opencode",
     "opencode-antigravity-auth@1.2.8",
-    "opencode-openai-codex-auth@4.2.0"
+    "opencode-openai-codex-auth@4.2.0",
+    "@franlol/opencode-md-table-formatter@0.0.3"
   ],
   "provider": {
     "google": {

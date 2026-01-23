@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Convert org ID to tenant ID (uint32 hash via FNV-1a)
+# Usage: orgid-hash <org_id> [org_id2] ...
+
+set -euo pipefail
+
+if [[ $# -eq 0 ]]; then
+    echo "Usage: orgid-hash <org_id> [org_id2] ..."
+    echo "Example: orgid-hash REDACTED_ORG_ID"
+    exit 1
+fi
+
+# FNV-1a 32-bit hash (same as Go's hash/fnv.New32a)
+fnv1a_32() {
+    local str="$1"
+    local hash=2166136261  # FNV offset basis
+    local prime=16777619   # FNV prime
+    local mask=4294967295  # 2^32 - 1 (uint32 max)
+
+    for ((i = 0; i < ${#str}; i++)); do
+        local byte=$(printf '%d' "'${str:$i:1}")
+        hash=$(( (hash ^ byte) * prime & mask ))
+    done
+
+    echo "$hash"
+}
+
+for org_id in "$@"; do
+    fnv1a_32 "$org_id"
+done

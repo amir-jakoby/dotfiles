@@ -22,3 +22,17 @@ if command -v fd &> /dev/null; then
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
   export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
 fi
+
+# fzf-tab: Replace zsh's default completion menu with fzf
+if [[ -f ~/.zsh/plugins/fzf-tab/fzf-tab.plugin.zsh ]]; then
+  source ~/.zsh/plugins/fzf-tab/fzf-tab.plugin.zsh
+  
+  # Basic settings
+  zstyle ':fzf-tab:*' fzf-flags --height=50% --layout=reverse
+  zstyle ':fzf-tab:*' prefix ''  # Remove · prefix
+  
+  # Override zprezto's %F{yellow} format with plain text (fzf doesn't render zsh prompt codes)
+  zstyle ':completion:*:descriptions' format '-- %d --'
+  zstyle ':completion:*:messages' format '-- %d --'
+  zstyle ':completion:*:warnings' format '-- no matches --'
+fi

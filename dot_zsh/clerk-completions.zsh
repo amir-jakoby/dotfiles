@@ -1,0 +1,200 @@
+#compdef clerk
+
+autoload -U is-at-least
+
+_clerk_orgs() {
+    local -a orgs
+    local line
+    while IFS=: read -r slug name; do
+        orgs+=("${slug}:${name}")
+    done < <(clerk complete-orgs 2>/dev/null)
+    _describe -t orgs 'organization' orgs
+}
+
+_clerk_orgs_and_subcommands() {
+    _alternative \
+        'orgs:organization:_clerk_orgs' \
+        'commands:subcommand:_clerk_orgs_subcommands'
+}
+
+_clerk() {
+    typeset -A opt_args
+    typeset -a _arguments_options
+    local ret=1
+
+    if is-at-least 5.2; then
+        _arguments_options=(-s -S -C)
+    else
+        _arguments_options=(-s -C)
+    fi
+
+    local context curcontext="$curcontext" state line
+    _arguments "${_arguments_options[@]}" : \
+        '-h[Print help]' \
+        '--help[Print help]' \
+        '-V[Print version]' \
+        '--version[Print version]' \
+        ":: :_clerk_commands" \
+        "*::: :->clerk" \
+        && ret=0
+
+    case $state in
+    (clerk)
+        words=($line[1] "${words[@]}")
+        (( CURRENT += 1 ))
+        curcontext="${curcontext%:*:*}:clerk-command-$line[1]:"
+        case $line[1] in
+            (users)
+                _arguments "${_arguments_options[@]}" : \
+                    '-l+[Number of users to fetch]:LIMIT:' \
+                    '--limit=[Number of users to fetch]:LIMIT:' \
+                    '-q+[Search query (email/name)]:QUERY:' \
+                    '--query=[Search query (email/name)]:QUERY:' \
+                    '-h[Print help]' \
+                    '--help[Print help]' \
+                    && ret=0
+                ;;
+            (orgs)
+                # After word manipulation: words=(orgs <arg1> <arg2> ...)
+                # words[2]=first_arg (org slug or subcommand), words[3]=second_arg
+                local first_arg="${words[2]}"
+                local second_arg="${words[3]}"
+                case $first_arg in
+                    (list)
+                        _arguments "${_arguments_options[@]}" : \
+                            '-l+[Number of orgs to fetch]:LIMIT:' \
+                            '--limit=[Number of orgs to fetch]:LIMIT:' \
+                            '-f+[Fuzzy search by name]:FUZZY:_clerk_orgs' \
+                            '--fuzzy=[Fuzzy search by name]:FUZZY:_clerk_orgs' \
+                            '-i[Output only org IDs]' \
+                            '--ids-only[Output only org IDs]' \
+                            '-h[Print help]' \
+                            '--help[Print help]' \
+                            && ret=0
+                        ;;
+                    (pick)
+                        _arguments "${_arguments_options[@]}" : \
+                            '-h[Print help]' \
+                            '--help[Print help]' \
+                            && ret=0
+                        ;;
+                    (*)
+                        case $second_arg in
+                            (members)
+                                # clerk orgs <org> members <user> <action> [template]
+                                # CURRENT: 4=user, 5=action, 6=template (if jwt)
+                                local action_arg="${words[5]}"
+                                if (( CURRENT == 4 )); then
+                                    _clerk_members && ret=0
+                                elif (( CURRENT == 5 )); then
+                                    _clerk_member_actions && ret=0
+                                elif (( CURRENT == 6 )) && [[ "$action_arg" == "jwt" ]]; then
+                                    _clerk_jwt_templates && ret=0
+                                fi
+                                ;;
+                            (*)
+                                _arguments "${_arguments_options[@]}" : \
+                                    '-h[Print help]' \
+                                    '--help[Print help]' \
+                                    '1::ORG or COMMAND:_clerk_orgs_and_subcommands' \
+                                    '2::ACTION:_clerk_org_actions' \
+                                    && ret=0
+                                ;;
+                        esac
+                        ;;
+                esac
+                ;;
+            (impersonate)
+                _arguments "${_arguments_options[@]}" : \
+                    '-h[Print help]' \
+                    '--help[Print help]' \
+                    '::USER_ID:' \
+                    && ret=0
+                ;;
+            (jwt)
+                _arguments "${_arguments_options[@]}" : \
+                    '-t+[JWT template name]:TEMPLATE:' \
+                    '--template=[JWT template name]:TEMPLATE:' \
+                    '--list[List available templates]' \
+                    '-h[Print help]' \
+                    '--help[Print help]' \
+                    '::USER_ID:' \
+                    && ret=0
+                ;;
+            (completions)
+                _arguments "${_arguments_options[@]}" : \
+                    '-h[Print help]' \
+                    '--help[Print help]' \
+                    ':SHELL:(bash elvish fish powershell zsh)' \
+                    && ret=0
+                ;;
+        esac
+        ;;
+    esac
+
+    return ret
+}
+
+_clerk_commands() {
+    local commands
+    commands=(
+        'users:List and search users'
+        'orgs:Manage organizations'
+        'impersonate:Generate a sign-in link to impersonate a user'
+        'jwt:Generate a JWT for API testing'
+        'completions:Generate shell completions'
+    )
+    _describe -t commands 'clerk commands' commands
+}
+
+_clerk_orgs_subcommands() {
+    local commands
+    commands=(
+        'list:List all organizations'
+        'pick:Interactively pick an organization'
+        'members:List members of the organization'
+    )
+    _describe -t commands 'subcommand' commands
+}
+
+_clerk_org_actions() {
+    local commands
+    commands=(
+        'members:List members of this organization'
+    )
+    _describe -t commands 'action' commands
+}
+
+_clerk_members() {
+    local org_slug="${words[2]}"
+    local -a members
+    local line
+    while IFS=: read -r user_id desc; do
+        members+=("${user_id}:${desc}")
+    done < <(clerk complete-users --org "$org_slug" 2>/dev/null)
+    _describe -t members 'member' members
+}
+
+_clerk_member_actions() {
+    local commands
+    commands=(
+        'impersonate:Impersonate this user'
+        'jwt:Generate a JWT for this user'
+    )
+    _describe -t commands 'action' commands
+}
+
+_clerk_jwt_templates() {
+    local -a templates
+    local line
+    while IFS=: read -r name desc; do
+        templates+=("${name}:${desc}")
+    done < <(clerk complete-jwt-templates 2>/dev/null)
+    _describe -t templates 'template' templates
+}
+
+if [ "$funcstack[1]" = "_clerk" ]; then
+    _clerk "$@"
+else
+    compdef _clerk clerk
+fi

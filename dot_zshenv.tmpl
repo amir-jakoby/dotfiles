@@ -24,7 +24,9 @@ export CLERK_KEY_PROD={{ onepasswordRead "op://Dotfiles/Clerk/prod" | quote }}
 export CLERK_API_KEY=$CLERK_KEY_PROD
 export AMIR_GITHUB_TOKEN={{ onepasswordRead "op://Dotfiles/GH PAT/token" | quote }}
 export YOGEV_GITHUB_TOKEN={{ onepasswordRead "op://Dotfiles/YOGEV_GITHUB_TOKEN/token" | quote }}
+export ISHAI_GITHUB_TOKEN={{ onepasswordRead "op://Dotfiles/ISHAI_GITHUB_TOKEN/token" | quote }}
 export DRATA_TOKEN={{ onepasswordRead "op://Dotfiles/Drata/token" | quote }}
+export PAGERDUTY_TOKEN={{ onepasswordRead "op://Dotfiles/PagerDuty/token" | quote }}
 
 # ============================================================================
 # Environment variables
@@ -68,3 +70,4 @@ fpath=(
 
 # Granted (AWS SSO profile switcher)
 alias assume=". assume"
+. "$HOME/.cargo/env"
