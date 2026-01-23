@@ -3,13 +3,26 @@
   "google_auth": false,
   "categories": {
     "visual-engineering": {
-      "model": "google/gemini-3-pro-high"
+      "model": "google/gemini-3-pro-preview"
     },
     "artistry": {
-      "model": "google/gemini-3-pro-high"
+      "model": "google/gemini-3-pro-preview",
+      "variant": "max"
     },
     "writing": {
-      "model": "google/gemini-3-flash-high"
+      "model": "google/gemini-3-flash-preview"
+    },
+    "ultrabrain": {
+      "model": "openai/gpt-5.2-codex"
+    },
+    "quick": {
+      "model": "anthropic/claude-haiku-4-5"
+    },
+    "unspecified-low": {
+      "model": "anthropic/claude-sonnet-4-5"
+    },
+    "unspecified-high": {
+      "model": "anthropic/claude-opus-4-5"
     }
   },
   "agents": {
@@ -17,7 +30,7 @@
       "model": "opencode/glm-4.7-free"
     },
     "explore": {
-      "model": "google/antigravity-gemini-3-flash"
+      "model": "anthropic/claude-haiku-4-5"
     },
     "frontend-ui-ux-engineer": {
       "model": "google/antigravity-gemini-3-pro-high"
@@ -26,7 +39,27 @@
       "model": "google/antigravity-gemini-3-flash"
     },
     "multimodal-looker": {
-      "model": "google/antigravity-gemini-3-flash"
+      "model": "google/gemini-3-pro-preview"
+    },
+    "Sisyphus": {
+      "model": "anthropic/claude-opus-4-5"
+    },
+    "oracle": {
+      "model": "openai/gpt-5.2-codex",
+      "variant": "high"
+    },
+    "Prometheus (Planner)": {
+      "model": "anthropic/claude-opus-4-5"
+    },
+    "Metis (Plan Consultant)": {
+      "model": "anthropic/claude-opus-4-5"
+    },
+    "Momus (Plan Reviewer)": {
+      "model": "openai/gpt-5.2-codex",
+      "variant": "medium"
+    },
+    "Atlas": {
+      "model": "anthropic/claude-opus-4-5"
     }
   }
 }

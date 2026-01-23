@@ -11,7 +11,15 @@ Chezmoi-managed opencode configuration. Deploys to `~/.config/opencode/`.
 
 ## Editing
 
-Edit source files here, then `chezmoi apply`. Never edit target (`~/.config/opencode/`) directly.
+Edit files directly in `~/.config/opencode/`, then sync to chezmoi:
+
+```bash
+# Sync changes to chezmoi source
+chezmoi re-add ~/.config/opencode
+
+# Commit and push
+cd ~/.local/share/chezmoi && git add -A && git commit -m "chore: sync opencode config" && git push
+```
 
 ## Plugins
 
