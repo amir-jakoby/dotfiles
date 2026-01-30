@@ -86,6 +86,8 @@ __path_append() {
   esac
 }
 
+__path_prepend "$HOME/Code/sawmills-cli/target/debug"
+
 __update_completion() {
   local cmd=$1 file=$2
   (( $+commands[$cmd] )) || return 0
@@ -97,10 +99,12 @@ __update_completion() {
 __update_completion kubectl "$ZSH_COMPLETIONS_DIR/_kubectl"
 __update_completion atmos "$ZSH_COMPLETIONS_DIR/_atmos"
 __update_completion drata "$ZSH_COMPLETIONS_DIR/_drata"
+__update_completion sm "$ZSH_COMPLETIONS_DIR/_sm"
 
 [[ -s "$ZSH_COMPLETIONS_DIR/_kubectl" ]] && source "$ZSH_COMPLETIONS_DIR/_kubectl"
 [[ -s "$ZSH_COMPLETIONS_DIR/_atmos" ]] && source "$ZSH_COMPLETIONS_DIR/_atmos"
 [[ -s "$ZSH_COMPLETIONS_DIR/_drata" ]] && source "$ZSH_COMPLETIONS_DIR/_drata"
+[[ -s "$ZSH_COMPLETIONS_DIR/_sm" ]] && source "$ZSH_COMPLETIONS_DIR/_sm"
 
 # clerk uses 'completions' not 'completion'
 if (( $+commands[clerk] )); then
@@ -223,3 +227,6 @@ export PATH="$HOME/executable_bin:$PATH"
 # opencode
 export PATH="$HOME/.opencode/bin:$PATH"
 export PATH="/opt/homebrew/sbin:$PATH"
+
+# ttyd with Nerd Font
+alias ttyd='ttyd -t "fontFamily=FiraCodeNFM-Reg,FiraCode Nerd Font Mono,monospace" -t fontSize=15'
