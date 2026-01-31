@@ -3,14 +3,13 @@
   "google_auth": false,
   "categories": {
     "visual-engineering": {
-      "model": "google/gemini-3-pro-preview"
+      "model": "google/antigravity-gemini-3-pro-high"
     },
     "artistry": {
-      "model": "google/gemini-3-pro-preview",
-      "variant": "max"
+      "model": "google/antigravity-gemini-3-pro-high"
     },
     "writing": {
-      "model": "google/gemini-3-flash-preview"
+      "model": "google/antigravity-gemini-3-flash"
     },
     "ultrabrain": {
       "model": "openai/gpt-5.2-codex",
@@ -52,7 +51,7 @@
       "model": "anthropic/claude-haiku-4-5"
     },
     "multimodal-looker": {
-      "model": "google/gemini-3-flash-preview"
+      "model": "google/antigravity-gemini-3-flash"
     },
     "prometheus": {
       "model": "anthropic/claude-opus-4-5",
