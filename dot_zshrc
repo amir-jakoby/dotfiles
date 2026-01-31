@@ -238,3 +238,10 @@ alias ttyd='ttyd \
   -t enableSixel=true \
   -t disableLeaveAlert=true \
   -t "theme={\"background\":\"#222222\",\"foreground\":\"#e5e5e5\",\"cursor\":\"#16afca\",\"selection\":\"#444444\"}"'
+
+# OpenClaw Completion (cached - Node.js is slow)
+if (( $+commands[openclaw] )); then
+  [[ ! -s "$ZSH_COMPLETIONS_DIR/_openclaw" || "$commands[openclaw]" -nt "$ZSH_COMPLETIONS_DIR/_openclaw" ]] && \
+    openclaw completion --shell zsh >| "$ZSH_COMPLETIONS_DIR/_openclaw" 2>/dev/null
+  [[ -s "$ZSH_COMPLETIONS_DIR/_openclaw" ]] && source "$ZSH_COMPLETIONS_DIR/_openclaw"
+fi
