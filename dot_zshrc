@@ -99,7 +99,8 @@ __update_completion() {
 __update_completion kubectl "$ZSH_COMPLETIONS_DIR/_kubectl"
 __update_completion atmos "$ZSH_COMPLETIONS_DIR/_atmos"
 __update_completion drata "$ZSH_COMPLETIONS_DIR/_drata"
-__update_completion sm "$ZSH_COMPLETIONS_DIR/_sm"
+# sm: skip auto-update - dev build in target/debug changes constantly (1.5s to generate)
+# Run manually: sm completion zsh >| "$ZSH_COMPLETIONS_DIR/_sm"
 
 [[ -s "$ZSH_COMPLETIONS_DIR/_kubectl" ]] && source "$ZSH_COMPLETIONS_DIR/_kubectl"
 [[ -s "$ZSH_COMPLETIONS_DIR/_atmos" ]] && source "$ZSH_COMPLETIONS_DIR/_atmos"
