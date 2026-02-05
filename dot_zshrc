@@ -106,6 +106,9 @@ __update_completion drata "$ZSH_COMPLETIONS_DIR/_drata"
 [[ -s "$ZSH_COMPLETIONS_DIR/_atmos" ]] && source "$ZSH_COMPLETIONS_DIR/_atmos"
 [[ -s "$ZSH_COMPLETIONS_DIR/_drata" ]] && source "$ZSH_COMPLETIONS_DIR/_drata"
 [[ -s "$ZSH_COMPLETIONS_DIR/_sm" ]] && source "$ZSH_COMPLETIONS_DIR/_sm"
+if [[ -x "$HOME/Code/sawmills-cli/target/release/sm" ]]; then
+  (( $+functions[_sm] )) && compdef _sm "$HOME/Code/sawmills-cli/target/release/sm"
+fi
 
 # clerk uses 'completions' not 'completion'
 if (( $+commands[clerk] )); then

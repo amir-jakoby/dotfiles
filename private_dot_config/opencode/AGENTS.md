@@ -57,19 +57,19 @@ Configured in `oh-my-opencode.json`:
 | Category | Model | Use Case |
 |----------|-------|----------|
 | `visual-engineering` | Gemini 3 Pro | Frontend, UI/UX, styling |
-| `ultrabrain` | GPT 5.2 Codex | Deep reasoning, complex architecture |
+| `ultrabrain` | GPT 5.3 Codex | Deep reasoning, complex architecture |
 | `artistry` | Gemini 3 Pro Max | Creative tasks |
 | `quick` | Claude Haiku 4.5 | Trivial tasks, single file changes |
 | `unspecified-low` | Claude Sonnet 4.5 | General low-effort |
-| `unspecified-high` | Claude Opus 4.5 | General high-effort |
+| `unspecified-high` | Claude Opus 4.6 | General high-effort |
 | `writing` | Gemini 3 Flash | Documentation, prose |
 
 ## Specialized Agents
 
 | Agent | Model | Purpose |
 |-------|-------|---------|
-| `Sisyphus` | Claude Opus 4.5 | Main orchestrator |
-| `oracle` | GPT 5.2 Codex | Read-only consultant, debugging |
+| `Sisyphus` | Claude Opus 4.6 | Main orchestrator |
+| `oracle` | GPT 5.3 Codex | Read-only consultant, debugging |
 | `explore` | Claude Haiku 4.5 | Codebase contextual grep |
 | `librarian` | GLM 4.7 | External docs, OSS examples |
 | `multimodal-looker` | Gemini 3 Pro | PDF/image analysis |

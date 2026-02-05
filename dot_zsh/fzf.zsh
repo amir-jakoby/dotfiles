@@ -35,4 +35,14 @@ if [[ -f ~/.zsh/plugins/fzf-tab/fzf-tab.plugin.zsh ]]; then
   zstyle ':completion:*:descriptions' format '-- %d --'
   zstyle ':completion:*:messages' format '-- %d --'
   zstyle ':completion:*:warnings' format '-- no matches --'
+
+  # Sawmills palette for sm completions
+  zstyle ':fzf-tab:complete:sm:*' fzf-flags --height=50% --layout=reverse --border --ansi \
+    '--color=fg:#EDEDED,bg:#0B0E14,hl:#E879F9,fg+:#FFFFFF,bg+:#1B2230,hl+:#E879F9' \
+    '--color=info:#7C5CFF,border:#7C5CFF,prompt:#7C5CFF,pointer:#22C55E,marker:#E879F9,spinner:#7C5CFF,header:#7C5CFF'
+
+  zstyle ':completion:*:sm:*:descriptions' format '%F{#7C5CFF}» %d%f'
+  zstyle ':completion:*:sm:*:messages' format '%F{#E879F9}%d%f'
+  zstyle ':completion:*:sm:*:warnings' format '%F{#FF6E66}%d%f'
+  zstyle ':completion:*:sm:*:corrections' format '%F{#E879F9}%d%f'
 fi
