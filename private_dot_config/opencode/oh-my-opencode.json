@@ -46,7 +46,7 @@
       "model": "anthropic/claude-opus-4-6"
     },
     "oracle": {
-      "model": "openai/gpt-5.3",
+      "model": "openai/gpt-5.3-codex",
       "variant": "high"
     },
     "librarian": {
@@ -67,7 +67,7 @@
       "variant": "max"
     },
     "momus": {
-      "model": "openai/gpt-5.3",
+      "model": "openai/gpt-5.3-codex",
       "variant": "medium"
     },
     "atlas": {
