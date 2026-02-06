@@ -27,8 +27,8 @@ Complete guide to managing this dotfiles setup.
 # Install chezmoi + 1Password CLI
 brew install chezmoi 1password-cli
 
-# Authenticate 1Password
-eval $(op signin)
+# Bootstrap 1Password service account
+export OP_SERVICE_ACCOUNT_TOKEN="<sawmills-sa-token>"
 
 # Clone and apply
 chezmoi init --apply amir-jakoby
@@ -49,6 +49,7 @@ Located at `~/.config/chezmoi/chezmoi.toml`:
 ```toml
 [onepassword]
   command = "op"
+  mode = "service"
   prompt = false
 
 [data]
@@ -71,15 +72,15 @@ export CORP_PROXY=http://proxy.corp:8080
 
 ### Adding a New Secret
 
-1. Create in 1Password:
+1. Create in 1Password (use vault ID to avoid ambiguity with duplicate vault names):
    ```bash
-   op item create --vault Dotfiles --category "API Credential" \
+   op item create --vault twc5qlrgqquiaworifv5eczvhy --category "API Credential" \
      --title "ServiceName" "token=your-secret-value"
    ```
 
-2. Reference in template (`.tmpl` file):
+2. Reference in template (`.tmpl` file) using vault ID:
    ```bash
-   export SERVICE_TOKEN={{ onepasswordRead "op://Dotfiles/ServiceName/token" | quote }}
+   export SERVICE_TOKEN={{ onepasswordRead "op://twc5qlrgqquiaworifv5eczvhy/ServiceName/token" | quote }}
    ```
 
 3. Apply:
@@ -90,14 +91,14 @@ export CORP_PROXY=http://proxy.corp:8080
 ### Listing Secrets
 
 ```bash
-op item list --vault Dotfiles
+op item list --vault twc5qlrgqquiaworifv5eczvhy
 ```
 
 ### Updating a Secret
 
 1. Update in 1Password (UI or CLI):
    ```bash
-   op item edit "ServiceName" --vault Dotfiles "token=new-value"
+   op item edit "ServiceName" --vault twc5qlrgqquiaworifv5eczvhy "token=new-value"
    ```
 
 2. Re-apply dotfiles:
@@ -200,10 +201,11 @@ chezmoi verify
 
 ## Troubleshooting
 
-### 1Password Not Authenticated
+### 1Password Service Account Not Set
 
 ```bash
-eval $(op signin)
+# Set the SA token (already exported in ~/.zshenv after first apply)
+export OP_SERVICE_ACCOUNT_TOKEN="<sawmills-sa-token>"
 chezmoi apply
 ```
 
@@ -304,6 +306,6 @@ For automated environments without 1Password:
    {{ if env "CI" }}
    export TOKEN=$GITHUB_TOKEN
    {{ else }}
-   export TOKEN={{ onepasswordRead "op://..." }}
+   export TOKEN={{ onepasswordRead "op://twc5qlrgqquiaworifv5eczvhy/..." }}
    {{ end }}
    ```

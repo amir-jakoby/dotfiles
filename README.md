@@ -9,8 +9,8 @@ Personal macOS environment managed with [chezmoi](https://chezmoi.io) and [1Pass
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 brew install chezmoi 1password-cli
 
-# 2. Sign in to 1Password
-eval $(op signin)
+# 2. Bootstrap 1Password service account token
+export OP_SERVICE_ACCOUNT_TOKEN="<sawmills-sa-token-from-1password>"
 
 # 3. Initialize dotfiles (will prompt for machine type, email, name)
 chezmoi init --apply amir-jakoby
@@ -65,26 +65,29 @@ This will:
 
 ## Secrets
 
-All secrets live in 1Password vault `Dotfiles`:
+All secrets live in 1Password **Dotfiles** vault (ID: `twc5qlrgqquiaworifv5eczvhy`), accessed via a Sawmills service account.
+
+chezmoi runs in `service` mode — no interactive `op signin` needed. Just set `OP_SERVICE_ACCOUNT_TOKEN` before running.
 
 | Item | Fields |
 |------|--------|
 | GPG | `key-id` |
 | GitHub | `email` |
-| GitHub Tokens | `approver-token` |
 | GoReleaser | `key` |
 | Clerk | `staging`, `preprod`, `prod` |
+| Sawmills OP Service Account Token | `credential` |
+| LaunchDarkly Access Token | `credential` |
 
 ### Adding a New Secret
 
 ```bash
-# 1. Create in 1Password
-op item create --vault Dotfiles --category "API Credential" \
+# 1. Create in 1Password (use vault ID to avoid ambiguity)
+op item create --vault twc5qlrgqquiaworifv5eczvhy --category "API Credential" \
   --title "ServiceName" "token=your-secret-value"
 
-# 2. Reference in template
+# 2. Reference in template (use vault ID, not name)
 chezmoi edit ~/.zshenv
-# Add: export SERVICE_TOKEN={{ onepasswordRead "op://Dotfiles/ServiceName/token" | quote }}
+# Add: export SERVICE_TOKEN={{ onepasswordRead "op://twc5qlrgqquiaworifv5eczvhy/ServiceName/token" | quote }}
 
 # 3. Apply
 chezmoi apply
@@ -109,8 +112,9 @@ export CORP_PROXY=http://proxy.corp:8080
 ## Prerequisites
 
 - macOS
-- [1Password](https://1password.com) account with CLI access
-- Access to `Dotfiles` vault
+- [1Password CLI](https://developer.1password.com/docs/cli) (`op`)
+- Sawmills 1Password service account token (for `OP_SERVICE_ACCOUNT_TOKEN`)
+- Access to `Dotfiles` vault (ID: `twc5qlrgqquiaworifv5eczvhy`)
 
 ## Documentation
 

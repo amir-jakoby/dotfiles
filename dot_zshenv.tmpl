@@ -17,21 +17,23 @@ fi
 # Secrets from 1Password (managed by chezmoi)
 # ============================================================================
 
-export GORELEASER_KEY={{ onepasswordRead "op://Dotfiles/GoReleaser/key" | quote }}
-export CLERK_KEY_STAGING={{ onepasswordRead "op://Dotfiles/Clerk/staging" | quote }}
-export CLERK_KEY_PREPROD={{ onepasswordRead "op://Dotfiles/Clerk/preprod" | quote }}
-export CLERK_KEY_PROD={{ onepasswordRead "op://Dotfiles/Clerk/prod" | quote }}
+export GORELEASER_KEY={{ onepasswordRead "op://twc5qlrgqquiaworifv5eczvhy/GoReleaser/key" | quote }}
+export CLERK_KEY_STAGING={{ onepasswordRead "op://twc5qlrgqquiaworifv5eczvhy/Clerk/staging" | quote }}
+export CLERK_KEY_PREPROD={{ onepasswordRead "op://twc5qlrgqquiaworifv5eczvhy/Clerk/preprod" | quote }}
+export CLERK_KEY_PROD={{ onepasswordRead "op://twc5qlrgqquiaworifv5eczvhy/Clerk/prod" | quote }}
 export CLERK_API_KEY=$CLERK_KEY_PROD
-export AMIR_GITHUB_TOKEN={{ onepasswordRead "op://Dotfiles/GH PAT/token" | quote }}
-export YOGEV_GITHUB_TOKEN={{ onepasswordRead "op://Dotfiles/YOGEV_GITHUB_TOKEN/token" | quote }}
-export ISHAI_GITHUB_TOKEN={{ onepasswordRead "op://Dotfiles/ISHAI_GITHUB_TOKEN/token" | quote }}
-export DRATA_TOKEN={{ onepasswordRead "op://Dotfiles/Drata/token" | quote }}
-export PAGERDUTY_TOKEN={{ onepasswordRead "op://Dotfiles/PagerDuty/token" | quote }}
-export DD_API_KEY={{ onepasswordRead "op://Dotfiles/Datadog/api_key" | quote }}
-export DD_APP_KEY={{ onepasswordRead "op://Dotfiles/Datadog/app_key" | quote }}
-export ANTHROPIC_API_KEY={{ onepasswordRead "op://Dotfiles/Anthropic/api_key" | quote }}
-export GEMINI_API_KEY={{ onepasswordRead "op://Dotfiles/Gemini/api_key" | quote }}
-export SAWMILLS_OP_SERVICE_ACCOUNT_TOKEN={{ onepasswordRead "op://Employee/5tbse3s4xab3mch77rdktwai7m/credential" | quote }}
+export AMIR_GITHUB_TOKEN={{ onepasswordRead "op://twc5qlrgqquiaworifv5eczvhy/GH PAT/token" | quote }}
+export YOGEV_GITHUB_TOKEN={{ onepasswordRead "op://twc5qlrgqquiaworifv5eczvhy/YOGEV_GITHUB_TOKEN/token" | quote }}
+export ISHAI_GITHUB_TOKEN={{ onepasswordRead "op://twc5qlrgqquiaworifv5eczvhy/ISHAI_GITHUB_TOKEN/token" | quote }}
+export DRATA_TOKEN={{ onepasswordRead "op://twc5qlrgqquiaworifv5eczvhy/Drata/token" | quote }}
+export PAGERDUTY_TOKEN={{ onepasswordRead "op://twc5qlrgqquiaworifv5eczvhy/PagerDuty/token" | quote }}
+export DD_API_KEY={{ onepasswordRead "op://twc5qlrgqquiaworifv5eczvhy/Datadog/api_key" | quote }}
+export DD_APP_KEY={{ onepasswordRead "op://twc5qlrgqquiaworifv5eczvhy/Datadog/app_key" | quote }}
+export ANTHROPIC_API_KEY={{ onepasswordRead "op://twc5qlrgqquiaworifv5eczvhy/Anthropic/api_key" | quote }}
+export GEMINI_API_KEY={{ onepasswordRead "op://twc5qlrgqquiaworifv5eczvhy/Gemini/api_key" | quote }}
+export SAWMILLS_OP_SERVICE_ACCOUNT_TOKEN={{ onepasswordRead "op://twc5qlrgqquiaworifv5eczvhy/Sawmills OP Service Account Token/credential" | quote }}
+export OP_SERVICE_ACCOUNT_TOKEN=$SAWMILLS_OP_SERVICE_ACCOUNT_TOKEN
+export LAUNCHDARKLY_ACCESS_TOKEN={{ onepasswordRead "op://twc5qlrgqquiaworifv5eczvhy/LaunchDarkly Access Token/credential" | quote }}
 
 # ============================================================================
 # Environment variables
