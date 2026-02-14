@@ -36,34 +36,21 @@ export OP_SERVICE_ACCOUNT_TOKEN=$SAWMILLS_OP_SERVICE_ACCOUNT_TOKEN
 export LAUNCHDARKLY_ACCESS_TOKEN={{ onepasswordRead "op://twc5qlrgqquiaworifv5eczvhy/LaunchDarkly Access Token/credential" | quote }}
 
 # ============================================================================
-# Environment variables
+# Private environment variables (from 1Password via chezmoi)
 # ============================================================================
 
-export CHAMBER_KMS_KEY_ALIAS=aws/ssm
+[[ -s "$HOME/.env.private" ]] && source "$HOME/.env.private"
 
-# Sawmills org IDs
-export STAGING_ORG_ID=REDACTED
-export PREPROD_ORG_ID=REDACTED
-export PROD_ORG_ID=REDACTED
+# ============================================================================
+# Clerk org IDs (cached — run `clerk-refresh-orgs` to update)
+# ============================================================================
 
-# Customer org IDs
-export SIMILARWEB_ORG_ID=REDACTED
-export VIA_ORG_ID=REDACTED
-export BP_ORG_ID=REDACTED
-export HIBOB_ORG_ID=REDACTED
-export NEXXEN_ORG_ID=REDACTED
-export BIGID_ORG_ID=REDACTED
-export EGNYTE_ORG_ID=REDACTED
-export FIREBLOCKS_ID=REDACTED
-export VARONIS_ORG_ID=REDACTED
-export ZD_ORG_ID=REDACTED
-export APPLIED_SYSTEMS_ID=REDACTED
-export PROD_OLLY_ORG_ID=REDACTED
-export COLLECTORS_ORG_ID=REDACTED
-export CHOICE_HOTEL_ORG=REDACTED
-export BLOCK_ORG_ID=REDACTED
+[[ -s "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/clerk-orgs.zsh" ]] && \
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/clerk-orgs.zsh"
 
-export GOPRIVATE='REDACTED'
+# ============================================================================
+# Environment variables
+# ============================================================================
 
 export PATH="/opt/homebrew/bin:$PATH"
 
@@ -75,6 +62,5 @@ fpath=(
   $fpath
 )
 
-# Granted (AWS SSO profile switcher)
-alias assume=". assume"
-. "$HOME/.cargo/env"
+# Rust/Cargo
+[[ -s "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"

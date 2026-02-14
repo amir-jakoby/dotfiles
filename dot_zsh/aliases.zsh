@@ -45,3 +45,6 @@ alias dc="docker-compose"
 
 # Remote operator default endpoint
 alias remote-operator="remote-operator -a https://REDACTED_INTERNAL_URL"
+
+# Granted (AWS SSO profile switcher)
+alias assume=". assume"

@@ -1,0 +1,6 @@
+# -*- mode: sh -*-
+# Private environment variables (pulled from 1Password by chezmoi)
+# DO NOT edit directly — update the "Env Private" item in 1Password.
+
+export GOPRIVATE={{ onepasswordRead "op://twc5qlrgqquiaworifv5eczvhy/Env Private/Go/goprivate" | quote }}
+export CHAMBER_KMS_KEY_ALIAS={{ onepasswordRead "op://twc5qlrgqquiaworifv5eczvhy/Env Private/Go/chamber_kms_key_alias" | quote }}
