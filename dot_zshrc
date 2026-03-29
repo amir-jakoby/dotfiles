@@ -99,15 +99,34 @@ __update_completion() {
 __update_completion kubectl "$ZSH_COMPLETIONS_DIR/_kubectl"
 __update_completion atmos "$ZSH_COMPLETIONS_DIR/_atmos"
 __update_completion drata "$ZSH_COMPLETIONS_DIR/_drata"
+__update_completion remote-operator "$ZSH_COMPLETIONS_DIR/_remote-operator"
 # sm: skip auto-update - dev build in target/debug changes constantly (1.5s to generate)
 # Run manually: sm completion zsh >| "$ZSH_COMPLETIONS_DIR/_sm"
 
 [[ -s "$ZSH_COMPLETIONS_DIR/_kubectl" ]] && source "$ZSH_COMPLETIONS_DIR/_kubectl"
 [[ -s "$ZSH_COMPLETIONS_DIR/_atmos" ]] && source "$ZSH_COMPLETIONS_DIR/_atmos"
 [[ -s "$ZSH_COMPLETIONS_DIR/_drata" ]] && source "$ZSH_COMPLETIONS_DIR/_drata"
+[[ -s "$ZSH_COMPLETIONS_DIR/_remote-operator" ]] && source "$ZSH_COMPLETIONS_DIR/_remote-operator"
 [[ -s "$ZSH_COMPLETIONS_DIR/_sm" ]] && source "$ZSH_COMPLETIONS_DIR/_sm"
 if [[ -x "$HOME/Code/sawmills-cli/target/release/sm" ]]; then
   (( $+functions[_sm] )) && compdef _sm "$HOME/Code/sawmills-cli/target/release/sm"
+fi
+
+# Local custom completions
+if [[ -d "$HOME/.zsh/completions" ]]; then
+  fpath=("$HOME/.zsh/completions" $fpath)
+  if [[ -s "$HOME/.zsh/completions/_new-task" ]]; then
+    autoload -Uz _new_task
+    (( $+functions[compdef] )) && compdef _new_task new-task
+  fi
+fi
+
+# opencode: yargs completion (PATH added later in this file, so use explicit path check)
+if [[ -x "$HOME/.opencode/bin/opencode" ]] || (( $+commands[opencode] )); then
+  [[ ! -s "$ZSH_COMPLETIONS_DIR/_opencode" ]] && \
+    "$HOME/.opencode/bin/opencode" completion >| "$ZSH_COMPLETIONS_DIR/_opencode" 2>/dev/null
+  [[ -s "$ZSH_COMPLETIONS_DIR/_opencode" ]] && source "$ZSH_COMPLETIONS_DIR/_opencode"
+  (( $+functions[_opencode_yargs_completions] )) && compdef _opencode_yargs_completions opencode
 fi
 
 # clerk uses 'completions' not 'completion'
@@ -208,6 +227,22 @@ fi
 
 setopt prompt_subst interactive_comments
 
+_fix_ssh_auth_sock() {
+  [[ -n "$TMUX" ]] || return
+
+  local line sock
+  line="$(tmux showenv SSH_AUTH_SOCK 2>/dev/null)" || return
+  [[ "$line" == -* ]] && return
+
+  sock="${line#SSH_AUTH_SOCK=}"
+  [[ -S "$sock" ]] || return
+
+  export SSH_AUTH_SOCK="$sock"
+}
+
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd _fix_ssh_auth_sock
+
 alias openpr="$HOME/dotfiles/scripts/open-pr.sh"
 
 alias cat="bat --paging=never"
@@ -250,3 +285,17 @@ if (( $+commands[openclaw] )); then
     openclaw completion --shell zsh >| "$ZSH_COMPLETIONS_DIR/_openclaw" 2>/dev/null
   [[ -s "$ZSH_COMPLETIONS_DIR/_openclaw" ]] && source "$ZSH_COMPLETIONS_DIR/_openclaw"
 fi
+
+# kubie (shell-local Kubernetes context isolation)
+if (( $+commands[kubie] )); then
+  __update_completion kubie "$ZSH_COMPLETIONS_DIR/_kubie"
+  [[ -s "$ZSH_COMPLETIONS_DIR/_kubie" ]] && source "$ZSH_COMPLETIONS_DIR/_kubie"
+
+  alias kb='kubie'
+fi
+
+alias k='kubectl'
+alias codex='codex --dangerously-bypass-approvals-and-sandbox'
+
+# Added by agent-scripts installer
+export CODE_ROOT="/Users/amirjakoby/Code"
