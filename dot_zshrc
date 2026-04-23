@@ -14,8 +14,10 @@
 #autoload -U +X compinit && compinit
 #autoload -U +X bashcompinit && bashcompinit 
 
-# Initialize starship prompt
-eval "$(starship init zsh)"
+# Initialize starship prompt when the terminal supports it.
+if [[ "${TERM:-}" != dumb ]] && (( $+commands[starship] )); then
+  eval "$(starship init zsh)"
+fi
 
 # eval "$(pyenv init -)"
 # eval "$(pyenv virtualenv-init -)"
@@ -34,7 +36,13 @@ function {
     source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
   fi
 
-  for config (~/.zsh/*.zsh) source "${config}"
+  local config
+  for config (~/.zsh/*.zsh); do
+    case "${config:t}" in
+      *-completions.zsh) continue ;;
+    esac
+    source "${config}"
+  done
 }
 
 # Load optional Prezto modules shortly after prompt is ready.
@@ -61,6 +69,7 @@ fi
 ZSH_COMPLETIONS_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/completions"
 mkdir -p "$ZSH_COMPLETIONS_DIR"
 ZSH_LAZY_DIR="${ZDOTDIR:-$HOME}/.zsh/lazy"
+autoload -Uz add-zsh-hook
 
 __lazy_source() {
   local file=$1 init=$2
@@ -88,56 +97,97 @@ __path_append() {
 
 __path_prepend "$HOME/Code/sawmills-cli/target/debug"
 
-__update_completion() {
-  local cmd=$1 file=$2
+typeset -ga ZSH_DEFERRED_COMPLETION_FILES=()
+
+__queue_completion_file() {
+  local file=$1
+  [[ -s "$file" ]] || return 0
+  ZSH_DEFERRED_COMPLETION_FILES+=("$file")
+}
+
+__load_deferred_completions() {
+  (( $+functions[compdef] )) || return 0
+
+  local file
+  for file in "${ZSH_DEFERRED_COMPLETION_FILES[@]}"; do
+    source "$file"
+  done
+  ZSH_DEFERRED_COMPLETION_FILES=()
+
+  if [[ -s "$HOME/.zsh/completions/_new-task" ]]; then
+    autoload -Uz _new_task
+    (( $+functions[_new_task] )) && compdef _new_task new-task
+  fi
+
+  if [[ -x "$HOME/Code/sawmills-cli/target/release/sm" ]]; then
+    (( $+functions[_sm] )) && compdef _sm "$HOME/Code/sawmills-cli/target/release/sm"
+  fi
+
+  (( $+functions[_opencode_yargs_completions] )) && compdef _opencode_yargs_completions opencode
+  (( $+functions[_pipenv] )) && compdef _pipenv pipenv
+  add-zsh-hook -d precmd __load_deferred_completions 2>/dev/null
+}
+
+__refresh_completion_cache() {
+  local cmd=$1 file=$2 force=${3:-0}
   (( $+commands[$cmd] )) || return 0
-  if [[ ! -s "$file" || "$commands[$cmd]" -nt "$file" ]]; then
+  if (( force )) || [[ ! -s "$file" ]]; then
     "$cmd" completion zsh >| "$file" 2>/dev/null
   fi
 }
 
-__update_completion kubectl "$ZSH_COMPLETIONS_DIR/_kubectl"
-__update_completion atmos "$ZSH_COMPLETIONS_DIR/_atmos"
-__update_completion drata "$ZSH_COMPLETIONS_DIR/_drata"
-__update_completion remote-operator "$ZSH_COMPLETIONS_DIR/_remote-operator"
+zsh-refresh-completions() {
+  __refresh_completion_cache kubectl "$ZSH_COMPLETIONS_DIR/_kubectl" 1
+  __refresh_completion_cache atmos "$ZSH_COMPLETIONS_DIR/_atmos" 1
+  __refresh_completion_cache drata "$ZSH_COMPLETIONS_DIR/_drata" 1
+  __refresh_completion_cache remote-operator "$ZSH_COMPLETIONS_DIR/_remote-operator" 1
+  # sm: skip auto-refresh - dev build in target/debug changes constantly (1.5s to generate)
+  # Run manually when needed: sm completion zsh >| "$ZSH_COMPLETIONS_DIR/_sm"
+  if [[ -x "$HOME/.opencode/bin/opencode" ]] || (( $+commands[opencode] )); then
+    "$HOME/.opencode/bin/opencode" completion >| "$ZSH_COMPLETIONS_DIR/_opencode" 2>/dev/null
+  fi
+  if (( $+commands[clerk] )); then
+    clerk completions zsh >| "$ZSH_COMPLETIONS_DIR/_clerk" 2>/dev/null
+  fi
+}
+
+__refresh_completion_cache kubectl "$ZSH_COMPLETIONS_DIR/_kubectl"
+__refresh_completion_cache atmos "$ZSH_COMPLETIONS_DIR/_atmos"
+__refresh_completion_cache drata "$ZSH_COMPLETIONS_DIR/_drata"
+__refresh_completion_cache remote-operator "$ZSH_COMPLETIONS_DIR/_remote-operator"
 # sm: skip auto-update - dev build in target/debug changes constantly (1.5s to generate)
 # Run manually: sm completion zsh >| "$ZSH_COMPLETIONS_DIR/_sm"
 
-[[ -s "$ZSH_COMPLETIONS_DIR/_kubectl" ]] && source "$ZSH_COMPLETIONS_DIR/_kubectl"
-[[ -s "$ZSH_COMPLETIONS_DIR/_atmos" ]] && source "$ZSH_COMPLETIONS_DIR/_atmos"
-[[ -s "$ZSH_COMPLETIONS_DIR/_drata" ]] && source "$ZSH_COMPLETIONS_DIR/_drata"
-[[ -s "$ZSH_COMPLETIONS_DIR/_remote-operator" ]] && source "$ZSH_COMPLETIONS_DIR/_remote-operator"
-[[ -s "$ZSH_COMPLETIONS_DIR/_sm" ]] && source "$ZSH_COMPLETIONS_DIR/_sm"
-if [[ -x "$HOME/Code/sawmills-cli/target/release/sm" ]]; then
-  (( $+functions[_sm] )) && compdef _sm "$HOME/Code/sawmills-cli/target/release/sm"
-fi
+__queue_completion_file "$ZSH_COMPLETIONS_DIR/_kubectl"
+__queue_completion_file "$ZSH_COMPLETIONS_DIR/_atmos"
+__queue_completion_file "$ZSH_COMPLETIONS_DIR/_drata"
+__queue_completion_file "$ZSH_COMPLETIONS_DIR/_remote-operator"
+__queue_completion_file "$ZSH_COMPLETIONS_DIR/_sm"
+__queue_completion_file "$ZSH_COMPLETIONS_DIR/_codexctl"
+__queue_completion_file "${ZDOTDIR:-$HOME}/.zsh/clerk-completions.zsh"
+__queue_completion_file "${ZDOTDIR:-$HOME}/.zsh/codex-completions.zsh"
 
 # Local custom completions
 if [[ -d "$HOME/.zsh/completions" ]]; then
   fpath=("$HOME/.zsh/completions" $fpath)
-  if [[ -s "$HOME/.zsh/completions/_new-task" ]]; then
-    autoload -Uz _new_task
-    (( $+functions[compdef] )) && compdef _new_task new-task
-  fi
 fi
 
 # opencode: yargs completion (PATH added later in this file, so use explicit path check)
 if [[ -x "$HOME/.opencode/bin/opencode" ]] || (( $+commands[opencode] )); then
   [[ ! -s "$ZSH_COMPLETIONS_DIR/_opencode" ]] && \
     "$HOME/.opencode/bin/opencode" completion >| "$ZSH_COMPLETIONS_DIR/_opencode" 2>/dev/null
-  [[ -s "$ZSH_COMPLETIONS_DIR/_opencode" ]] && source "$ZSH_COMPLETIONS_DIR/_opencode"
-  (( $+functions[_opencode_yargs_completions] )) && compdef _opencode_yargs_completions opencode
+  __queue_completion_file "$ZSH_COMPLETIONS_DIR/_opencode"
 fi
 
 # clerk uses 'completions' not 'completion'
 if (( $+commands[clerk] )); then
-  [[ ! -s "$ZSH_COMPLETIONS_DIR/_clerk" || "$commands[clerk]" -nt "$ZSH_COMPLETIONS_DIR/_clerk" ]] && \
+  [[ ! -s "$ZSH_COMPLETIONS_DIR/_clerk" ]] && \
     clerk completions zsh >| "$ZSH_COMPLETIONS_DIR/_clerk" 2>/dev/null
-  [[ -s "$ZSH_COMPLETIONS_DIR/_clerk" ]] && source "$ZSH_COMPLETIONS_DIR/_clerk"
+  __queue_completion_file "$ZSH_COMPLETIONS_DIR/_clerk"
 fi
 
-# __update_completion helm "$ZSH_COMPLETIONS_DIR/_helm"
-# __update_completion oc "$ZSH_COMPLETIONS_DIR/_oc"
+# __refresh_completion_cache helm "$ZSH_COMPLETIONS_DIR/_helm"
+# __refresh_completion_cache oc "$ZSH_COMPLETIONS_DIR/_oc"
 # [[ -s "$ZSH_COMPLETIONS_DIR/_helm" ]] && source "$ZSH_COMPLETIONS_DIR/_helm"
 # [[ -s "$ZSH_COMPLETIONS_DIR/_oc" ]] && source "$ZSH_COMPLETIONS_DIR/_oc"
 
@@ -147,7 +197,8 @@ _pipenv() {
   eval $(env COMMANDLINE="${words[1,$CURRENT]}" _PIPENV_COMPLETE=complete-zsh  pipenv)
 }
 if [[ "$(basename ${(%):-%x})" != "_pipenv" ]]; then
-  (( $+functions[compdef] )) && compdef _pipenv pipenv
+  __load_deferred_completions
+  add-zsh-hook precmd __load_deferred_completions
 fi
 
 # Lazy-load jenv to avoid startup cost.
@@ -160,7 +211,6 @@ if command -v jenv >/dev/null; then
 fi
 
 # Lazy-load conda/pyenv when entering Python projects.
-autoload -Uz add-zsh-hook
 __python_dir_lazy() {
   if [[ -f pyproject.toml || -f requirements.txt || -f Pipfile || -f setup.py || -d .venv || -f environment.yml || -f .python-version ]]; then
     [[ -z ${__python_dir_bootstrapped:-} ]] || return 0
@@ -288,7 +338,7 @@ fi
 
 # kubie (shell-local Kubernetes context isolation)
 if (( $+commands[kubie] )); then
-  __update_completion kubie "$ZSH_COMPLETIONS_DIR/_kubie"
+  __refresh_completion_cache kubie "$ZSH_COMPLETIONS_DIR/_kubie"
   [[ -s "$ZSH_COMPLETIONS_DIR/_kubie" ]] && source "$ZSH_COMPLETIONS_DIR/_kubie"
 
   alias kb='kubie'
