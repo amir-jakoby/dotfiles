@@ -6,7 +6,7 @@ $git_branch\
 $git_state\
 $git_status\
 $kubernetes\
-${custom.tmux_session}\
+${env_var.STARSHIP_TMUX_SESSION}\
 $aws\
 $gcloud\
 $nodejs\
@@ -36,14 +36,6 @@ us-east-1 = "ue1"
 
 [buf]
 symbol = " "
-
-[custom.tmux_session]
-command = "tmux display-message -p '#S' 2>/dev/null | tr -d '\n'"
-when = "test -n \"$TMUX\""
-symbol = "tmux "
-format = 'in [$symbol$output]($style) '
-style = 'bold cyan'
-ignore_timeout = true
 
 [cmd_duration]
 min_time = 500
@@ -86,6 +78,13 @@ symbol = " "
 
 [elm]
 symbol = " "
+
+[env_var.STARSHIP_TMUX_SESSION]
+variable = "STARSHIP_TMUX_SESSION"
+default = ""
+symbol = "tmux "
+format = 'in [$symbol$env_value]($style) '
+style = 'bold cyan'
 
 [fennel]
 symbol = " "

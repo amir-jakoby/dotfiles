@@ -290,8 +290,19 @@ _fix_ssh_auth_sock() {
   export SSH_AUTH_SOCK="$sock"
 }
 
+_init_tmux_prompt_context() {
+  [[ -n "$TMUX" ]] || return
+  [[ -n "${STARSHIP_TMUX_SESSION:-}" ]] && return
+
+  local session
+  session="$(tmux display-message -p '#S' 2>/dev/null)" || return
+  [[ -n "$session" ]] || return
+  export STARSHIP_TMUX_SESSION="$session"
+}
+
 autoload -Uz add-zsh-hook
 add-zsh-hook precmd _fix_ssh_auth_sock
+_init_tmux_prompt_context
 
 alias openpr="$HOME/dotfiles/scripts/open-pr.sh"
 
