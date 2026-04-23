@@ -1,10 +1,55 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
+format = """
+$directory\
+$git_branch\
+$git_state\
+$git_status\
+$kubernetes\
+${custom.tmux_session}\
+$aws\
+$gcloud\
+$nodejs\
+$buf\
+$status\
+$cmd_duration\
+$line_break\
+$character"""
+add_newline = false
+scan_timeout = 15
+command_timeout = 300
+
 [aws]
 symbol = " "
+style = "bold blue"
+format = 'on [$symbol($profile )(\($region\) )]($style) '
+
+[aws.region_aliases]
+us-east-1 = "ue1"
+
+[aws.profile_aliases]
+"core-root/AdministratorAccess" = "core-root/admin"
+"plat-prod/AdministratorAccess" = "plat-prod/admin"
+"plat-sandbox/AdministratorAccess" = "plat-sandbox/admin"
+"plat-staging/AdministratorAccess" = "plat-staging/admin"
+"codex-staging-admin" = "codex-staging"
 
 [buf]
 symbol = " "
+
+[custom.tmux_session]
+command = "tmux display-message -p '#S' 2>/dev/null | tr -d '\n'"
+when = "test -n \"$TMUX\""
+symbol = "tmux "
+format = 'in [$symbol$output]($style) '
+style = 'bold cyan'
+ignore_timeout = true
+
+[cmd_duration]
+min_time = 500
+show_milliseconds = true
+format = 'took [$duration]($style) '
+style = 'bold yellow'
 
 [bun]
 symbol = " "
@@ -59,6 +104,70 @@ symbol = " "
 
 [git_commit]
 tag_symbol = '  '
+
+[git_state]
+style = 'bold red'
+format = '\([$state( $progress_current/$progress_total)]($style)\) '
+
+[kubernetes]
+disabled = false
+symbol = "☸ "
+format = 'on [$symbol$context(::$namespace)]($style) '
+
+[[kubernetes.contexts]]
+context_pattern = '^arn:aws:eks:.*:cluster/sawmills-plat-ue1-prod-eks-cluster$'
+context_alias = 'plat-prod'
+style = 'bold red'
+
+[[kubernetes.contexts]]
+context_pattern = '^sawmills-plat-ue1-prod-eks-cluster$'
+context_alias = 'plat-prod'
+style = 'bold red'
+
+[[kubernetes.contexts]]
+context_pattern = '^plat-prod$'
+context_alias = 'plat-prod'
+style = 'bold red'
+
+[[kubernetes.contexts]]
+context_pattern = '^prod$'
+context_alias = 'prod'
+style = 'bold red'
+
+[[kubernetes.contexts]]
+context_pattern = '^prod-eks$'
+context_alias = 'prod-eks'
+style = 'bold red'
+
+[[kubernetes.contexts]]
+context_pattern = '^arn:aws:eks:.*:cluster/sawmills-plat-ue1-staging-eks-cluster$'
+context_alias = 'plat-staging'
+style = 'bold yellow'
+
+[[kubernetes.contexts]]
+context_pattern = '^plat-staging$'
+context_alias = 'plat-staging'
+style = 'bold yellow'
+
+[[kubernetes.contexts]]
+context_pattern = '^staging$'
+context_alias = 'staging'
+style = 'bold yellow'
+
+[[kubernetes.contexts]]
+context_pattern = '^sawmills-plat-ue1-sandbox-eks-cluster$'
+context_alias = 'plat-sandbox'
+style = 'bold cyan'
+
+[[kubernetes.contexts]]
+context_pattern = '^kind-lbtest$'
+context_alias = 'kind-lbtest'
+style = 'green'
+
+[[kubernetes.contexts]]
+context_pattern = '^orbstack$'
+context_alias = 'orbstack'
+style = 'green'
 
 [golang]
 symbol = " "
@@ -194,6 +303,9 @@ symbol = " "
 
 [status]
 symbol = " "
+disabled = false
+format = '[$symbol$status]($style) '
+style = 'bold red'
 
 [swift]
 symbol = " "
