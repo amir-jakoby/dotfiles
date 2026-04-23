@@ -1,0 +1,204 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+usage() {
+    cat <<'EOF' >&2
+Usage:
+  tmux-agent-metadata set --pane %1 --agent codex --state running [--cwd /path] [--event Stop]
+  tmux-agent-metadata clear --pane %1
+  tmux-agent-metadata list [--agents-only]
+EOF
+}
+
+need_tmux() {
+    command -v tmux >/dev/null 2>&1 || exit 0
+}
+
+tmux_get_pane_option() {
+    local pane_id="$1"
+    local option="$2"
+    tmux show-option -pvt "$pane_id" "$option" 2>/dev/null | sed 's/^[^ ]* //' || true
+}
+
+tmux_set_pane_option() {
+    local pane_id="$1"
+    local option="$2"
+    local value="$3"
+    tmux set-option -pqt "$pane_id" "$option" "$value"
+}
+
+tmux_unset_pane_option() {
+    local pane_id="$1"
+    local option="$2"
+    tmux set-option -pqu -t "$pane_id" "$option" 2>/dev/null || true
+}
+
+pane_exists() {
+    local pane_id="$1"
+    tmux display-message -p -t "$pane_id" '#{pane_id}' >/dev/null 2>&1
+}
+
+trim() {
+    local value="$1"
+    value="${value#"${value%%[![:space:]]*}"}"
+    value="${value%"${value##*[![:space:]]}"}"
+    printf '%s' "$value"
+}
+
+truncate() {
+    local value="$1"
+    local max_len="$2"
+    if [ "${#value}" -le "$max_len" ]; then
+        printf '%s' "$value"
+    else
+        printf '%s' "${value:0:max_len-3}..."
+    fi
+}
+
+REPO_PROJECT=""
+REPO_BRANCH=""
+REPO_ESSENCE=""
+
+resolve_repo_bits() {
+    local cwd="$1"
+
+    REPO_PROJECT=""
+    REPO_BRANCH=""
+    REPO_ESSENCE=""
+
+    if [ -n "$cwd" ] && [ -d "$cwd" ] && [ "$cwd" != "/" ]; then
+        REPO_PROJECT=$(basename "$cwd")
+        REPO_BRANCH=$(git -C "$cwd" branch --show-current 2>/dev/null || true)
+        if [ -n "$REPO_BRANCH" ] && [ "$REPO_BRANCH" != "main" ] && [ "$REPO_BRANCH" != "master" ]; then
+            REPO_ESSENCE="${REPO_PROJECT}:${REPO_BRANCH}"
+        else
+            REPO_ESSENCE="$REPO_PROJECT"
+        fi
+    fi
+}
+
+set_metadata() {
+    local pane_id="" agent="" state="" cwd="" event=""
+
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --pane) pane_id="${2:-}"; shift 2 ;;
+            --agent) agent="${2:-}"; shift 2 ;;
+            --state) state="${2:-}"; shift 2 ;;
+            --cwd) cwd="${2:-}"; shift 2 ;;
+            --event) event="${2:-}"; shift 2 ;;
+            *) usage; exit 1 ;;
+        esac
+    done
+
+    [ -n "$pane_id" ] || exit 0
+    pane_exists "$pane_id" || exit 0
+
+    local now_epoch now_iso resolved_cwd project branch essence icon summary resume_cmd state_symbol
+    now_epoch="$(date +%s)"
+    now_iso="$(date '+%Y-%m-%dT%H:%M:%S%z')"
+    resolved_cwd="$cwd"
+    if [ -z "$resolved_cwd" ] || [ ! -d "$resolved_cwd" ]; then
+        resolved_cwd="$(tmux display-message -p -t "$pane_id" '#{pane_current_path}' 2>/dev/null || true)"
+    fi
+
+    resolve_repo_bits "$resolved_cwd"
+    project="$REPO_PROJECT"
+    branch="$REPO_BRANCH"
+    essence="$REPO_ESSENCE"
+
+    if [ -z "$essence" ]; then
+        essence="$(tmux display-message -p -t "$pane_id" '#{pane_title}' 2>/dev/null || true)"
+        essence="$(trim "$essence")"
+    fi
+    if [ -z "$essence" ]; then
+        essence="$(tmux display-message -p -t "$pane_id" '#{session_name}' 2>/dev/null || echo "shell")"
+    fi
+
+    case "$agent" in
+        codex) icon="⚙" ;;
+        claude) icon="✨" ;;
+        opencode) icon="💻" ;;
+        "") icon="🤖" ;;
+        *) icon="🤖" ;;
+    esac
+
+    case "$state" in
+        running) state_symbol="⌛" ;;
+        needs-input) state_symbol="⚠" ;;
+        done) state_symbol="✔" ;;
+        *) state_symbol="•" ;;
+    esac
+
+    summary="$(truncate "${icon} ${agent:-agent} | ${state:-idle} | ${essence}" 72)"
+    printf -v resume_cmd 'cd %q && codex resume --last' "${resolved_cwd:-$HOME}"
+
+    tmux_set_pane_option "$pane_id" "@agent_name" "${agent:-}"
+    tmux_set_pane_option "$pane_id" "@agent_state" "${state:-}"
+    tmux_set_pane_option "$pane_id" "@agent_cwd" "${resolved_cwd:-}"
+    tmux_set_pane_option "$pane_id" "@agent_project" "${project:-}"
+    tmux_set_pane_option "$pane_id" "@agent_branch" "${branch:-}"
+    tmux_set_pane_option "$pane_id" "@agent_essence" "${essence:-}"
+    tmux_set_pane_option "$pane_id" "@agent_task" "${essence:-}"
+    tmux_set_pane_option "$pane_id" "@agent_icon" "$icon"
+    tmux_set_pane_option "$pane_id" "@agent_state_symbol" "$state_symbol"
+    tmux_set_pane_option "$pane_id" "@agent_display" "$summary"
+    tmux_set_pane_option "$pane_id" "@agent_resume_cmd" "$resume_cmd"
+    tmux_set_pane_option "$pane_id" "@agent_last_event" "${event:-}"
+    tmux_set_pane_option "$pane_id" "@agent_updated_at" "$now_iso"
+    tmux_set_pane_option "$pane_id" "@agent_updated_epoch" "$now_epoch"
+}
+
+clear_metadata() {
+    local pane_id=""
+
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --pane) pane_id="${2:-}"; shift 2 ;;
+            *) usage; exit 1 ;;
+        esac
+    done
+
+    [ -n "$pane_id" ] || exit 0
+    pane_exists "$pane_id" || exit 0
+
+    local option
+    for option in \
+        @agent_name @agent_state @agent_cwd @agent_project @agent_branch @agent_essence \
+        @agent_task @agent_icon @agent_state_symbol @agent_display @agent_resume_cmd \
+        @agent_last_event @agent_updated_at @agent_updated_epoch
+    do
+        tmux_unset_pane_option "$pane_id" "$option"
+    done
+}
+
+list_metadata() {
+    local agents_only="0"
+
+    while [ "$#" -gt 0 ]; do
+        case "$1" in
+            --agents-only) agents_only="1"; shift ;;
+            *) usage; exit 1 ;;
+        esac
+    done
+
+    tmux list-panes -a -F '#{session_name}	#{window_index}	#{pane_index}	#{pane_id}	#{pane_active}	#{window_active}	#{pane_current_command}	#{pane_current_path}	#{pane_title}	#{?@agent_name,#{@agent_name},-}	#{?@agent_state,#{@agent_state},-}	#{?@agent_project,#{@agent_project},-}	#{?@agent_branch,#{@agent_branch},-}	#{?@agent_display,#{@agent_display},-}	#{?@agent_updated_at,#{@agent_updated_at},-}	#{?@agent_updated_epoch,#{@agent_updated_epoch},0}	#{?@agent_resume_cmd,#{@agent_resume_cmd},-}' |
+    awk -F '\t' -v agents_only="$agents_only" '
+        agents_only == 1 && $10 == "-" { next }
+        { print }
+    ' |
+    sort -t $'\t' -k16,16nr -k1,1 -k2,2n -k3,3n
+}
+
+need_tmux
+
+cmd="${1:-}"
+shift || true
+
+case "$cmd" in
+    set) set_metadata "$@" ;;
+    clear) clear_metadata "$@" ;;
+    list) list_metadata "$@" ;;
+    *) usage; exit 1 ;;
+esac

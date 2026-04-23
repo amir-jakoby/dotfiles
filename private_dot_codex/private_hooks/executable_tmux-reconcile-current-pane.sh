@@ -9,6 +9,8 @@ fi
 pane_id=$(tmux display-message -p '#{pane_id}' 2>/dev/null || true)
 [ -n "$pane_id" ] || exit 0
 
+metadata_script="$HOME/bin/tmux-agent-metadata"
+
 state=$(tmux show-environment -g "TMUX_AGENT_PANE_${pane_id}_STATE" 2>/dev/null | sed 's/^[^=]*=//' || true)
 agent=$(tmux show-environment -g "TMUX_AGENT_PANE_${pane_id}_AGENT" 2>/dev/null | sed 's/^[^=]*=//' || true)
 [ "$state" = "running" ] || exit 0
@@ -33,6 +35,11 @@ if [ -z "$cleaned_name" ]; then
 fi
 
 tmux rename-window -t "$pane_id" "✔️ $cleaned_name" 2>/dev/null || true
+
+if [ -x "$metadata_script" ]; then
+    cwd=$(tmux display-message -p -t "$pane_id" '#{pane_current_path}' 2>/dev/null || true)
+    "$metadata_script" set --pane "$pane_id" --agent codex --state done --cwd "$cwd" --event stale-running >/dev/null 2>&1 || true
+fi
 
 if [ -z "${TMUX:-}" ]; then
     TMUX=$(tmux display-message -p '#{socket_path},#{pid},#{session_id}' 2>/dev/null || true)

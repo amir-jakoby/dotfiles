@@ -90,6 +90,11 @@ esac
 RESOLVED_CWD=$(resolve_cwd "$CWD")
 ESSENCE=$(resolve_essence "$RESOLVED_CWD")
 
+METADATA_SCRIPT="$HOME/bin/tmux-agent-metadata"
+if [ -x "$METADATA_SCRIPT" ] && [ -n "$STATE" ]; then
+    "$METADATA_SCRIPT" set --pane "$PANE_ID" --agent codex --state "$STATE" --cwd "$RESOLVED_CWD" --event "$EVENT" >/dev/null 2>&1 || true
+fi
+
 case "$HOOK_EVENT" in
     SessionStart)
         tmux rename-window -t "$PANE_ID" "$ESSENCE" 2>/dev/null || true
