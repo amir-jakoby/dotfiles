@@ -35,6 +35,7 @@ prezto_modules=(
   'spectrum'
   'utility'
   'completion'
+  'autosuggestions'
 )
 
 prezto_extra_modules=(
@@ -45,7 +46,6 @@ prezto_extra_modules=(
   'fasd'
   'syntax-highlighting'
   'history-substring-search'
-  'autosuggestions'
   'ssh'
 )
 
