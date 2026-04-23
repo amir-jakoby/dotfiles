@@ -1,159 +1,136 @@
 ---
 name: remote-operator-debug
-description: Debug customer collectors via remote-operator CLI. Use when "collector logs", "customer kubectl", "remote operator", or need to run commands on customer Kubernetes clusters.
+description: Use when checking customer-side collector pods, logs, or deployment state through remote-operator, especially when namespace or RBAC differs from the default assumptions.
 ---
 
 # Remote Operator Debug
 
-Run kubectl and other commands on customer collectors via remote-operator.
+Use this only for customer-side checks. For shared platform components, use normal prod or staging `kubectl`.
 
 ## Prerequisites
 
-- **aws-sso-login** skill: AWS authentication
-- remote-operator binary in PATH
+- `remote-operator` binary in `PATH`
+- customer Clerk org ID, or customer name you can resolve with `clerk`
+- target environment: prod or staging
 
 ## Environment URLs
 
 | Environment | Remote Operator Address |
-|-------------|------------------------|
-| prod | `https://REDACTED_INTERNAL_URL` |
-| staging | `https://REDACTED_INTERNAL_URL` |
+| --- | --- |
+| prod | `<prod_remote_operator_url>` |
+| staging | `<staging_remote_operator_url>` |
 
-## Workflow
+## Fast Path
 
-### Step 1: Get Org ID and Environment
+### 1. Resolve Org
 
-Ask user for:
-- Clerk org ID (e.g., `REDACTED_ORG_ID`)
-- Environment (prod/staging)
+If only customer name is known:
 
-### Step 2: List Deployments
+```bash
+clerk orgs list -f "<customer_name>"
+```
+
+### 2. List Deployments
 
 ```bash
 remote-operator -a <ro_address> -o <org_id> manage ls
 ```
 
-Output shows:
-- Deployment names
-- Instance names (needed for commands)
-- Pod status
+Pick the deployment and a live instance from this output.
 
-### Step 3: Run Commands
+### 3. Discover Namespace First
 
-Basic pattern:
+Do not assume `sawmills`.
+
 ```bash
 remote-operator -a <ro_address> -o <org_id> manage run \
   -d <deployment> --instance-name <instance> \
-  -- <command>
+  -- kubectl auth can-i get pods -n sawmills
+
+remote-operator -a <ro_address> -o <org_id> manage run \
+  -d <deployment> --instance-name <instance> \
+  -- kubectl auth can-i get pods -n sawmills-central
 ```
+
+Then confirm with a namespaced read:
+
+```bash
+remote-operator -a <ro_address> -o <org_id> manage run \
+  -d <deployment> --instance-name <instance> \
+  -- kubectl get deploy -n <namespace>
+```
+
+### 4. Check Runtime
+
+```bash
+remote-operator -a <ro_address> -o <org_id> manage run \
+  -d <deployment> --instance-name <instance> \
+  -- kubectl get deploy -n <namespace>
+
+remote-operator -a <ro_address> -o <org_id> manage run \
+  -d <deployment> --instance-name <instance> \
+  -- kubectl get pods -n <namespace> -o wide
+```
+
+### 5. Sample Recent Logs
+
+Prefer pod-level logs over deployment-level logs when isolating one bad replica.
+
+```bash
+remote-operator -a <ro_address> -o <org_id> manage run \
+  -d <deployment> --instance-name <instance> \
+  -- kubectl logs -n <namespace> pod/<pod> -c main-collector --since=30m --tail=200
+```
+
+Focused grep:
+
+```bash
+remote-operator -a <ro_address> -o <org_id> manage run \
+  -d <deployment> --instance-name <instance> \
+  -- sh -lc 'kubectl logs -n <namespace> pod/<pod> -c main-collector --since=30m --tail=400 | rg -i "error|warn|refus|drop|timeout|fail|panic"'
+```
+
+### 6. Pull Events Only if Needed
+
+```bash
+remote-operator -a <ro_address> -o <org_id> manage run \
+  -d <deployment> --instance-name <instance> \
+  -- kubectl get events -n <namespace> --sort-by=.lastTimestamp
+```
+
+## RBAC Rules
+
+- Expect namespace-scoped permissions only.
+- `kubectl get ns` may fail.
+- `kubectl get pods -A` may fail.
+- `Forbidden` on cluster-scoped verbs does not mean the customer deployment is gone.
+- Start with namespaced reads, not cluster inventory.
 
 ## Common Commands
 
-### Get Logs
-
 ```bash
-# Main collector
-remote-operator -a <ro_address> -o <org_id> manage run \
-  -d <deployment> --instance-name <instance> \
-  -- kubectl logs -n sawmills deployment/sawmills-collector -c main-collector --tail 200
+# Deployment health
+remote-operator ... -- kubectl describe deployment sawmills-collector -n <namespace>
 
-# HAProxy
-remote-operator -a <ro_address> -o <org_id> manage run \
-  -d <deployment> --instance-name <instance> \
-  -- kubectl logs -n sawmills deployment/sawmills-collector -c haproxy --tail 100
+# Helm values
+remote-operator ... -- helm get values sawmills-collector -n <namespace>
 
-# Telemetry collector
-remote-operator -a <ro_address> -o <org_id> manage run \
-  -d <deployment> --instance-name <instance> \
-  -- kubectl logs -n sawmills deployment/sawmills-collector -c telemetry-collector --tail 100
+# Restart, only with explicit approval
+remote-operator ... -- kubectl rollout restart deployment/sawmills-collector -n <namespace>
 ```
-
-### Check Pod Status
-
-```bash
-remote-operator -a <ro_address> -o <org_id> manage run \
-  -d <deployment> --instance-name <instance> \
-  -- kubectl get pods -n sawmills
-```
-
-### Describe Deployment
-
-```bash
-remote-operator -a <ro_address> -o <org_id> manage run \
-  -d <deployment> --instance-name <instance> \
-  -- kubectl describe deployment sawmills-collector -n sawmills
-```
-
-### Get Helm Values
-
-```bash
-remote-operator -a <ro_address> -o <org_id> manage run \
-  -d <deployment> --instance-name <instance> \
-  -- helm get values sawmills-collector -n sawmills
-```
-
-### Restart Pods
-
-```bash
-remote-operator -a <ro_address> -o <org_id> manage run \
-  -d <deployment> --instance-name <instance> \
-  -- kubectl rollout restart deployment/sawmills-collector -n sawmills
-```
-
-### Check Events
-
-```bash
-remote-operator -a <ro_address> -o <org_id> manage run \
-  -d <deployment> --instance-name <instance> \
-  -- kubectl get events -n sawmills --sort-by='.lastTimestamp'
-```
-
-## Filtering Logs
-
-```bash
-# Grep for errors
-remote-operator ... -- kubectl logs ... | grep -i error
-
-# Filter by time (last 5 minutes)
-remote-operator ... -- kubectl logs ... --since=5m
-
-# Follow logs (streaming)
-remote-operator ... -- kubectl logs ... -f
-```
-
-## Namespace
-
-Default namespace is `sawmills`. Service account has limited permissions:
-- Can access `sawmills` namespace
-- Cannot list pods across all namespaces (`-A` flag fails)
 
 ## Troubleshooting
 
-| Issue | Solution |
-|-------|----------|
-| `executable file not found` | Command not available in container |
-| `Forbidden` | Service account lacks permission |
-| `No resources found` | Wrong namespace or no matching pods |
-| `timeout` | Network issues or large output |
+| Issue | Meaning | Next step |
+| --- | --- | --- |
+| `Forbidden` | RBAC denied current verb or scope | switch to namespaced command |
+| `No resources found` | wrong namespace or object name | re-check namespace and deployment |
+| `executable file not found` | tool missing in the remote container | use a simpler command or `sh -lc` |
+| `timeout` | slow network or too much output | reduce scope with `--tail`, `--since`, or a single pod |
 
-## Example Session
+## Common Mistakes
 
-```bash
-# 1. Set variables
-ORG=REDACTED_ORG_ID
-RO=https://REDACTED_INTERNAL_URL
-
-# 2. List deployments
-remote-operator -a $RO -o $ORG manage ls
-
-# 3. Get logs from specific instance
-remote-operator -a $RO -o $ORG manage run \
-  -d SawmillsPoc --instance-name 7fc25w8 \
-  -- kubectl logs -n sawmills deployment/sawmills-collector -c main-collector --tail 100
-```
-
-## Notes
-
-- Instance name changes on redeployment; re-run `manage ls` to get current
-- Large log output may be truncated; use `--tail` to limit
-- Some commands like `logs` may default to wrong container; specify `-c`
+- Using remote-operator for platform checks.
+- Assuming namespace `sawmills`.
+- Reading only one pod when the alert labels already name a different pod.
+- Treating one `manage ls` snapshot as permanent; instance names change on redeploy.

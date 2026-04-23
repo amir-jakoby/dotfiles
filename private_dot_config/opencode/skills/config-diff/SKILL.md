@@ -9,7 +9,7 @@ Compare collector configurations between customers or environments to find discr
 
 ## Prerequisites
 
-- **aws-sso-login** skill: AWS authentication
+- AWS authentication for the target environment
 - **s3-config-editor** skill: Decrypt configs
 - **customer-config** skill: Get S3 paths
 - `yq` for YAML processing (optional)
@@ -19,6 +19,7 @@ Compare collector configurations between customers or environments to find discr
 ### Step 1: Identify Configs to Compare
 
 Common comparisons:
+
 - Broken customer vs working customer
 - Staging vs prod for same customer
 - Current config vs expected template
@@ -26,6 +27,7 @@ Common comparisons:
 ### Step 2: Get S3 Paths
 
 Use **customer-config** skill for each config:
+
 ```bash
 # Get deployment description to find S3 path
 remote-operator -a <ro_address> -o <org_id> manage run \
@@ -36,7 +38,7 @@ remote-operator -a <ro_address> -o <org_id> manage run \
 ### Step 3: Decrypt Configs
 
 ```bash
-cd /Users/amirjakoby/Code/sawmills-collector-reviews/confmap/provider/s3provider
+cd "${CODE_ROOT:-$HOME/Code}/sawmills-collector-reviews/confmap/provider/s3provider"
 
 # Customer A (broken)
 go run ./cmd/encrypt -decrypt -s3 "<customer_a_s3_path>" > /tmp/config-a.yaml
@@ -48,16 +50,19 @@ go run ./cmd/encrypt -decrypt -s3 "<customer_b_s3_path>" > /tmp/config-b.yaml
 ### Step 4: Compare Configs
 
 #### Full Diff
+
 ```bash
 diff /tmp/config-a.yaml /tmp/config-b.yaml
 ```
 
 #### Side-by-Side
+
 ```bash
 diff -y /tmp/config-a.yaml /tmp/config-b.yaml | head -100
 ```
 
 #### Colored Diff
+
 ```bash
 colordiff /tmp/config-a.yaml /tmp/config-b.yaml
 ```
@@ -65,12 +70,14 @@ colordiff /tmp/config-a.yaml /tmp/config-b.yaml
 ### Step 5: Focus on Key Sections
 
 #### Endpoints Only
+
 ```bash
 echo "=== Config A ===" && grep -E "(endpoint|bucket|address)" /tmp/config-a.yaml
 echo "=== Config B ===" && grep -E "(endpoint|bucket|address)" /tmp/config-b.yaml
 ```
 
 #### Exporters
+
 ```bash
 yq '.exporters' /tmp/config-a.yaml > /tmp/exporters-a.yaml
 yq '.exporters' /tmp/config-b.yaml > /tmp/exporters-b.yaml
@@ -78,6 +85,7 @@ diff /tmp/exporters-a.yaml /tmp/exporters-b.yaml
 ```
 
 #### Processors
+
 ```bash
 yq '.processors' /tmp/config-a.yaml > /tmp/processors-a.yaml
 yq '.processors' /tmp/config-b.yaml > /tmp/processors-b.yaml
@@ -86,21 +94,20 @@ diff /tmp/processors-a.yaml /tmp/processors-b.yaml
 
 ## Common Discrepancies
 
-| What to Check | Broken Pattern | Correct Pattern |
-|---------------|----------------|-----------------|
-| Livetail endpoint | `staging.plat.sm-svc.com` | `prod.plat.sm-svc.com` |
-| Telemetry bucket | `staging-telemetry-data` | `prod-telemetry-data` |
-| Gateway | `staging.plat.sm-svc.com` | `ingest.sawmills.ai` |
-| Prometheus | Wrong path | `/api/v1/push` |
+| What to Check     | Broken Pattern            | Correct Pattern        |
+| ----------------- | ------------------------- | ---------------------- |
+| Livetail endpoint | `<staging_livetail_host>` | `<prod_livetail_host>` |
+| Telemetry bucket  | `<staging_bucket>`        | `<prod_bucket>`        |
+| Gateway           | `<staging_gateway_host>`  | `<prod_gateway_host>`  |
+| Prometheus        | Wrong path                | `/api/v1/push`         |
 
-## Reference Customers
+## Reference Selection
 
-Known working configs for comparison:
+Choose a known-good reference config that matches:
 
-| Customer | Org ID | Use Case |
-|----------|--------|----------|
-| BigID | `REDACTED_ORG_ID` | Standard logs pipeline |
-| Choice Hotel | `REDACTED_ORG_ID` | After fix |
+- the same environment
+- the same general pipeline shape
+- a recently healthy deployment
 
 ## Quick Comparison Script
 
@@ -108,8 +115,8 @@ Known working configs for comparison:
 #!/bin/bash
 # compare-configs.sh <org_a> <org_b>
 
-S3_DIR="/Users/amirjakoby/Code/sawmills-collector-reviews/confmap/provider/s3provider"
-RO="https://REDACTED_INTERNAL_URL"
+S3_DIR="${CODE_ROOT:-$HOME/Code}/sawmills-collector-reviews/confmap/provider/s3provider"
+RO="<prod_remote_operator_url>"
 
 # Get S3 paths (manual step - paste paths)
 echo "Paste S3 path for config A:"

@@ -9,7 +9,7 @@ Systematic approach to debugging Sawmills collector issues.
 
 ## Prerequisites
 
-- **aws-sso-login** skill: AWS authentication
+- AWS authentication for the target environment
 - **customer-config** skill: View configs
 - **remote-operator-debug** skill: Run commands on customer collectors
 
@@ -18,6 +18,7 @@ Systematic approach to debugging Sawmills collector issues.
 ### Step 1: Gather Context
 
 Ask for:
+
 - Org ID (clerk org)
 - Environment (prod/staging)
 - Error description or symptoms
@@ -30,6 +31,7 @@ remote-operator -a <ro_address> -o <org_id> manage ls
 ```
 
 Look for:
+
 - Pod count (expected vs actual)
 - Container status (3/3 Running)
 - Recent restarts
@@ -50,32 +52,33 @@ remote-operator -a <ro_address> -o <org_id> manage run \
 
 ### Step 4: Identify Error Category
 
-| Error Pattern | Likely Cause | Next Step |
-|---------------|--------------|-----------|
-| `Unauthenticated` | Wrong endpoint (staging vs prod) | Check config endpoints |
-| `route not defined` | Missing routereceiver config | Check pipeline config |
-| `ResourceExhausted` | gRPC message too large | Server-side limit increase |
-| `connection refused` | Service down or wrong port | Check endpoint URLs |
-| `deadline exceeded` | Network/timeout issues | Check connectivity |
+| Error Pattern        | Likely Cause                     | Next Step                  |
+| -------------------- | -------------------------------- | -------------------------- |
+| `Unauthenticated`    | Wrong endpoint (staging vs prod) | Check config endpoints     |
+| `route not defined`  | Missing routereceiver config     | Check pipeline config      |
+| `ResourceExhausted`  | gRPC message too large           | Server-side limit increase |
+| `connection refused` | Service down or wrong port       | Check endpoint URLs        |
+| `deadline exceeded`  | Network/timeout issues           | Check connectivity         |
 
 ### Step 5: Check Config Endpoints
 
 Use **s3-config-editor** skill to decrypt and inspect config.
 
-Key endpoints to verify (prod):
+Key endpoint shapes to verify (prod):
+
 ```yaml
-# Correct prod endpoints
-livetail: livetail-ingest.ue1.prod.plat.sm-svc.com:443
-telemetry_bucket: sawmills-plat-ue1-prod-telemetry-data
-gateway: https://ingest.sawmills.ai:443
-prometheus: https://ingress.sawmills.ai/api/v1/push
+# Example prod-style targets
+livetail: <prod_livetail_endpoint>:443
+telemetry_bucket: <prod_telemetry_bucket>
+gateway: https://<prod_gateway_host>:443
+prometheus: https://<prod_prometheus_host>/api/v1/push
 ```
 
 Common mistake: staging endpoints in prod config.
 
 ### Step 6: Compare with Working Customer
 
-Use **config-diff** skill to compare with a known working customer (e.g., BigID).
+Use **config-diff** skill to compare with a known-good reference config from the same environment.
 
 ```bash
 # Decrypt both configs and diff
@@ -92,18 +95,19 @@ remote-operator -a <ro_address> -o <org_id> manage run \
 ```
 
 Verify:
+
 - `collector_gateway.endpoint`
 - `prometheusremotewrite.endpoint`
 - API keys present
 
 ### Step 8: Fix or Escalate
 
-| Issue Type | Action |
-|------------|--------|
+| Issue Type            | Action                          |
+| --------------------- | ------------------------------- |
 | Config endpoint wrong | Use **s3-config-editor** to fix |
-| Helm values wrong | Use remote-operator to update |
-| Server-side issue | Create Linear ticket |
-| Unknown | Consult team, attach logs |
+| Helm values wrong     | Use remote-operator to update   |
+| Server-side issue     | Create Linear ticket            |
+| Unknown               | Consult team, attach logs       |
 
 ## Common Issues Reference
 

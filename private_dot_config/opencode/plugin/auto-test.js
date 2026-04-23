@@ -7,7 +7,7 @@ var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require
 });
 
 // plugin/auto-test.ts
-var {existsSync} = (() => ({}));
+var { existsSync } = __require("node:fs");
 
 // node:path
 function assertPath(path) {

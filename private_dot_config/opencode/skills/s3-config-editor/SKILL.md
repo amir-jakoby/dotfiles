@@ -9,14 +9,14 @@ Download, decrypt, edit, re-encrypt, and upload S3 collector configurations.
 
 ## Prerequisites
 
-- **aws-sso-login** skill: AWS authentication
+- AWS authentication for the target environment
 - Go runtime for encrypt tool
-- S3 provider directory: `/Users/amirjakoby/Code/sawmills-collector-reviews/confmap/provider/s3provider`
+- S3 provider directory: `${CODE_ROOT:-$HOME/Code}/sawmills-collector-reviews/confmap/provider/s3provider`
 
 ## Configuration
 
 ```bash
-export S3_PROVIDER_DIR="/Users/amirjakoby/Code/sawmills-collector-reviews/confmap/provider/s3provider"
+export S3_PROVIDER_DIR="${CODE_ROOT:-$HOME/Code}/sawmills-collector-reviews/confmap/provider/s3provider"
 ```
 
 ## Workflow
@@ -24,11 +24,12 @@ export S3_PROVIDER_DIR="/Users/amirjakoby/Code/sawmills-collector-reviews/confma
 ### Step 1: Authenticate to AWS
 
 ```bash
-aws-sso login
-eval $(aws-sso eval -p plat-prod:AdministratorAccess)
+# Example: use your preferred AWS auth flow for the target account
+assume <target-account-profile>
 ```
 
 Verify:
+
 ```bash
 aws sts get-caller-identity
 ```
@@ -38,8 +39,9 @@ aws sts get-caller-identity
 From deployment description or use **customer-config** skill.
 
 S3 path format:
+
 ```
-s3://sawmills-plat-ue1-<env>-quotas/<org_id>-<hash>/collector-config/collectorId=<id>/<version>@<encryption_key>
+s3://<config-bucket>/<org_id>-<hash>/collector-config/collectorId=<id>/<version>@<encryption_key>
 ```
 
 ### Step 3: Decrypt Config
@@ -52,11 +54,13 @@ go run ./cmd/encrypt -decrypt -s3 "<full_s3_path_with_key>" > /tmp/customer-conf
 ### Step 4: Edit Config
 
 Open in editor and make changes:
+
 ```bash
 $EDITOR /tmp/customer-config.yaml
 ```
 
 Common fixes:
+
 - Replace `staging` with `prod` in endpoints
 - Fix bucket names
 - Update API keys
@@ -77,8 +81,10 @@ go run ./cmd/encrypt -upload -input /tmp/customer-config.yaml -s3 "<full_s3_path
 ### Step 7: Trigger Reload
 
 Either:
+
 - Redeploy from UI (creates new config version)
 - Restart collector pods:
+
 ```bash
 remote-operator -a <ro_address> -o <org_id> manage run \
   -d <deployment> --instance-name <instance> \
@@ -87,16 +93,16 @@ remote-operator -a <ro_address> -o <org_id> manage run \
 
 ## Commands Reference
 
-| Action | Command |
-|--------|---------|
-| Decrypt | `go run ./cmd/encrypt -decrypt -s3 "<path>"` |
+| Action           | Command                                                   |
+| ---------------- | --------------------------------------------------------- |
+| Decrypt          | `go run ./cmd/encrypt -decrypt -s3 "<path>"`              |
 | Encrypt + Upload | `go run ./cmd/encrypt -upload -input <file> -s3 "<path>"` |
-| View only | `go run ./cmd/encrypt -s3 "<path>"` (prints to stdout) |
+| View only        | `go run ./cmd/encrypt -s3 "<path>"` (prints to stdout)    |
 
 ## S3 Path Structure
 
 ```
-s3://sawmills-plat-ue1-<env>-quotas/
+s3://<config-bucket>/
   └── <org_id>-<config_hash>/
       └── collector-config/
           └── collectorId=<collector_id>/
@@ -122,7 +128,7 @@ s3://sawmills-plat-ue1-<env>-quotas/
 
 ```bash
 sed -i '' 's/staging/prod/g' /tmp/customer-config.yaml
-sed -i '' 's/sawmills-plat-ue1-staging/sawmills-plat-ue1-prod/g' /tmp/customer-config.yaml
+sed -i '' 's/<staging_bucket>/<prod_bucket>/g' /tmp/customer-config.yaml
 ```
 
 ### Verify Endpoints
