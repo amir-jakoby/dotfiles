@@ -66,3 +66,6 @@ fpath=(
 
 # Rust/Cargo
 [[ -s "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
+
+# Bun global binaries (for Bun-installed CLIs like opencode, ast-grep, comment-checker)
+export PATH="$HOME/.bun/bin:$PATH"
