@@ -340,11 +340,24 @@ alias ttyd='ttyd \
   -t disableLeaveAlert=true \
   -t "theme={\"background\":\"#222222\",\"foreground\":\"#e5e5e5\",\"cursor\":\"#16afca\",\"selection\":\"#444444\"}"'
 
-# OpenClaw Completion (cached - Node.js is slow)
+# OpenClaw completion is intentionally not generated during shell startup.
+# It may install/update Node packages, which can block new shells for minutes.
 if (( $+commands[openclaw] )); then
-  [[ ! -s "$ZSH_COMPLETIONS_DIR/_openclaw" || "$commands[openclaw]" -nt "$ZSH_COMPLETIONS_DIR/_openclaw" ]] && \
-    openclaw completion --shell zsh >| "$ZSH_COMPLETIONS_DIR/_openclaw" 2>/dev/null
   [[ -s "$ZSH_COMPLETIONS_DIR/_openclaw" ]] && source "$ZSH_COMPLETIONS_DIR/_openclaw"
+
+  zsh-refresh-openclaw-completion() {
+    local cache="$ZSH_COMPLETIONS_DIR/_openclaw"
+    local tmp="${cache}.$$"
+
+    openclaw completion --shell zsh >| "$tmp" 2>/dev/null
+    local rc=$?
+    if (( rc == 0 )) && [[ -s "$tmp" ]]; then
+      mv "$tmp" "$cache"
+    else
+      rm -f "$tmp"
+    fi
+    return "$rc"
+  }
 fi
 
 # kubie (shell-local Kubernetes context isolation)
